@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SkeleWiki</title>
+<style>
+  :root {
+    --text: #000;
+    --font: serif;
+    --size: 12pt;
+    --space: 0.5rem;
+    --bg: #dead;
+    --accent1: #60A575;
+    --accent2: #5CA2ED;
+    --bad: #b00;
+    --button-bg: var(--accent1);
+    --button-border: none;
+    --button-radius: 0px;
+    --max-width: 1200px;
+  }
+  * {
+    font-family: var(--font);
+    color: var(--text);
+    font-size: var(--size);
+    line-height: calc(var(--size) * 1.15);
+    background-color: transparent;
+  }
+  *[hidden], dialog:not([open]), main > section {
+    display: none;
+  }
+  html, body {
+    background-color: var(--bg);
+  }
+  body > header {
+    padding: var(--space) 0.25rem;
+  }
+  main {
+    padding: var(--space);
+    max-width: var(--max-width);
+  }
+  main:empty::after {
+    content: "No pages created";
+  }
+  * + * {
+    margin-top: var(--space);
+  }
+  #details #name {
+    color: var(--accent1);
+    font-size: calc(--size * 1.5);
+  }
+  a {
+    color: var(--accent2);
+  }
+  button {
+    background-color: var(--button-bg);
+    border: var(--button-border);
+    border-radius: var(--button-radius);
+  }
+  input, textarea, select, option {
+    border-radius: 0px;
+    padding: 0.25rem;
+    background: var(--bg);
+    border: 1px solid var(--text);
+  }
+  label {
+    display: block;
+  }
+  nav ul {
+    margin: 0;
+    padding: 0 0 0 0.5rem;
+    list-style: none;
+  }
+</style>
+<script>
+/**
+ * Modified beyond recognition from md.js, a lightweight markdown parser
+ * https://github.com/thysultan/md.js
+ * 
+ * @licence MIT
+ */
+/**
+ * Supports Markdown Features:
+ * - HTML
+ * - headings h1–h6+ (# h1, ## h2, ### h3, etc.)
+ * - paragraphs (\n\n)
+ * - line breaks (  \n)
+ * - blockquotes (> text)
+ * - horizontal rule (---, ***, - - -, * * *)
+ * - code blocks (```)
+ * - inline code (`code`)
+ * - images with alt text & optional title (![alt](image_src "optional title"))
+ * - inline Markdown links with optional title ([link text](link_url "optional title"))
+ * - auto links & email linking (<http://url.domain>, <person@email.example>)
+ * - lists with indentation (- list item, * list item, + list item)
+ * - checkboxes ([ ], [x])
+ * - bold, italic (**bold**, __bold__, *italic*, _italic_, ***bold & italic***, ___bold & italic___, **_bold & italic_**, etc.)
+ * - strikethrough (~~strikethrough~~)
+ * - escaped characters (\*, \_)
+ */
+/**
+ * markdown parser
+ * 
+ * @param  {string} markdown
+ * @return {string}
+ */
+function md (markdown) {
+  if (!markdown) {
+    return '';
+  }
+
+  const charMap = {
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+    '&': '&amp;',
+    '[': '&#91;',
+    ']': '&#93;',
+    '(': '&#40;',
+    ')': '&#41;',
+    '_': '&#95;',
+    '*': '&ast;',
+    '`': '&#96;',
+  };
+  // Save non-& charMap values without `&` to more easily check for double-escaped htmlEntity values
+  const doubleEscaped = Object.keys(charMap).filter(c => c != '&').map(c => charMap[c].replace(c != '&' ? '&' : '', ''));
+
+  const htmlEntity = str => {
+    return str.replace(/[<>&\(\)\[\]"']/g, c => (charMap[c] || c))
+      .replace(new RegExp(`&amp;(${doubleEscaped.join('|')})`, 'g'), '&$1');
+  }
+
+  var code = [];
+  var cIdx = 0; // Code index
+  var html = [];
+  var hIdx = 0; // HTML index
+  var length = markdown.length;
+
+  // to allow matching trailing paragraphs
+  if (markdown[length-1] !== '\n' && markdown[length-2] !== '\n') {
+    markdown += '\n\n';
+  }
+
+  // format, removes tabs, leading and trailing spaces
+  markdown = (
+    markdown
+      // escaped characters
+      .replace(/\\(.)/g, (m, c) => (charMap[c] || m))
+      // collect code blocks and replace with placeholder
+      // we do this to avoid code blocks matching the paragraph regexp
+      .replace(/```(.*)\n([^\0]+?)```(?!```)/gm, (m, lang, block) => {
+        code[cIdx] = {lang, block: htmlEntity(block)};
+        return `{code-${cIdx++}}`;
+      })
+      // inline code
+      .replace(/`([^`]+?)`/g, (m, code) => `<code>${ htmlEntity(code) }</code>`)
+      // auto links
+      .replace(/<([^>\s]+(\/\/|@)[^>\s]+)>/g, (m, url, method) => `[${ url }](${ method === '@' ? 'mailto:' : '' }${url})`)
+      // links
+      .replace(/(!?)\[([^\]]*?)\]\(([^\s\n]*)(?:| "(.*)")\)/gm, (m, img, text, url, title) => {
+        text = htmlEntity(text);
+        // try to decode url before re-encoding it in case it has encoded values to prevent encoding the % character
+        try { url = decodeURI(url); } catch {} // using try/catch because a malformed URI throws an error
+        url = encodeURI(url);
+        title = title ? ` title="${ htmlEntity(title) }"` : '';
+        if (img) return `<img src="${ url }" alt="${text}"${title}>`;
+        return `<a href="${ url }"${ title }>${ text }</a>`;
+      })
+      // HTML tags
+      .replace(/(<\/?[a-zA-Z]+[^>]*>)/gm, (m, tag) => {
+        html[hIdx] = tag;
+        return `{html-${hIdx++}}`;
+      })
+      // blockquotes
+      .replace(/^[ \t]*>+ (.*)/gm, '<blockquote>\n$1\n</blockquote>')
+      .replace(/(<\/blockquote>\n?<blockquote>)+?/g, '')
+      // headings
+      .replace(/^(#+) +(.*)/gm, (m, hash, content) => `<h${ hash.length }>${ content }</h${ hash.length }>`)
+      // headings h1 (commonmark)
+      .replace(/^([^\n\t ])(.*)\n====+/gm, '<h1>$1$2</h1>')
+      // headings h2 (commonmark)
+      .replace(/^([^\n\t ])(.*)\n----+/gm, '<h2>$1$2</h2>')
+      // horizontal rule 
+      .replace(/\n( *[-*]){3,}\n/gm, '<hr>')
+      // checkboxes
+      .replace(/\[( |x)\]/g, (m, checked) => `<input type="checkbox" disabled${ checked.toLowerCase() === 'x' ? ' checked' : '' }>`)
+      // line breaks
+      .replace(/  +\n/gm, '<br>')
+      // paragraphs - exclude lists, already-rendered HTML, & whitespace
+      .replace(/^([^-\+\*\d<\t \n])([^]*?)(?:\n\n)/gm, (m, leadingCharacter, body) => `<p>${ leadingCharacter }${ body }</p>\n`)
+      // lists
+      .replace(/^([\t ]*)(?:(-|\+|\*)|(\d+(?:\)|\.))) (.*)/gm, (m, leading, b, numbered, content) => {
+        leading = leading.replace(/  /g, '\t');
+        const type = numbered ? 'o' : 'u';
+        return `${leading}<${type}l><li>${content}</li></${type}l>`;
+      })
+  );
+
+  // This handles *almost* all combinations, but some indented lists combining ul & ol don't render right
+  var indentListRegExp = /<\/li><\/(u|o)l>\n(\t+)<(u|o)l><li>(.*)<\/li><\/(u|o)l>/;
+  while (markdown.match(indentListRegExp)) {
+    markdown = markdown.replace(indentListRegExp, function(m, parentEnd, tabs, childStart, content, childEnd) {
+      if (tabs.length > 0) {
+        tabs = tabs.substring(1);
+        if (tabs.length > 0) tabs = '\n' + tabs;
+      }
+      return `${tabs}<${childStart}l><li>${content}</li></${childEnd}l></li></${parentEnd}l>`;
+    });
+  }
+
+  markdown = (
+    markdown
+  // Combine lists
+      .replace(/(<\/ul>\n?[ \t]*<ul>)+?/g, '')
+      .replace(/(<\/ol>\n?[ \t]*<ol>)+?/g, '')
+      // strong
+      .replace(/\*\*([^\n*]+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/__([^\n_]+?)__/g, '<strong>$1</strong>')
+      // emphasis
+      .replace(/\*([^\n*]+?)\*/g, '<em>$1</em>')
+      .replace(/_([^\n_]+?)_/g, '<em>$1</em>')
+      // strike through
+      .replace(/(?:~~)([^~]+?)(?:~~)/g, '<del>$1</del>')
+  );
+
+  // replace html tag placeholders
+  for (let i = 0; i < hIdx; i++) {
+    markdown = markdown.replace(`{html-${i}}`, html[i]);
+  }
+
+  // replace code block placeholders
+  for (let i = 0; i < cIdx; i++) {
+    const { lang, block } = code[i];
+    markdown = markdown.replace(
+      `{code-${i}}`,
+      `<pre><code${lang ? ` class="language-${ lang }"` : ''}>${htmlEntity(block)}</code></pre>`
+    );
+  }
+
+  return markdown.trim();
+}
+</script>
+</head>
+<body>
+<header>
+  <section id="details">
+    <a href="." id="name">asdf</a>
+    <span id="desc"></span>
+  </section>
+  <nav>
+    <label>
+        Search <input type="search">
+    </label>
+    <ul></ul>
+  </nav>
+</header>
+<dialog id="settings">
+</dialog>
+<main></main>
+<script>(()=>{
+  const w = window;
+  w.q = (s, e) => (e ?? document).querySelector(s);
+  w.qa = (s, e) => (e ?? document).querySelectorAll(s);
+  w.main = q('main');
+  // w.getPage = (el) => ({
+  //   id: el.id,
+  //   name: q('h1', el)?.textContent ?? 'No Name',
+  //   text: q('article', el)?.textContent ?? '',
+  //   created: new Date(q('time', el)?.textContent ?? null),
+  //   el,
+  // });
+
+  customElements.define('md-display', class extends HTMLElement {
+    constructor() {
+      super();
+      this.content = '';
+    }
+    display(content = null) {
+      if (content !== null) this.content = content;
+      this.innerHTML = /* html */`${md(this.content)}<pre class="sourcemd" hidden>${this.content}</pre>`;
+    }
+    revert() {
+      this.innerHTML = this.content;
+    }
+    connectedCallback() {
+      const content = q('.sourcemd', this)?.innerHTML ?? this.innerHTML;
+      this.display(content);
+    }
+  }, { extends: 'article' });
+
+  w.app = {
+    update(data = {}) {
+      Object.keys(data).forEach(k => {
+        q('#'+k).innerHTML = data[k];
+      });
+    },
+    pages: () => Array.from(qa('section', main)),
+    nameOf: (el) => q('h1', el).textContent,
+    go(page) {
+      const pp = app.pages();
+      pp.forEach(el => el.style.display = '');
+      const pg = document.getElementById(page) ?? pp.find(el => app.nameOf(el) === page) ?? pp[0];
+      if (pg) {
+        document.title = app.nameOf(pg);
+        pg.style.display = 'block';
+      }
+    },
+    add(name, text) {
+      p = document.createElement('section');
+      p.id = Date.now();
+      p.innerHTML = /*html*/`<header><h1>${name}</h1></header><article is="md-display">${text}</article><footer><time>${new Date().toString()}</time></footer>`;
+      main.appendChild(p);
+      app.go(p.id);
+    },
+    save() {
+      const pp = app.pages();
+      pp.forEach(p => q('article', p).revert());
+      const html = /*html*/`<!DOCTYPE html><html lang="en"><head>${document.head.innerHTML}</head><body>${document.body.innerHTML}</body></html>`;
+      pp.forEach(p => q('article', p).display());
+      console.log(html);
+    },
+  };
+
+  
+  w.addEventListener('keydown', e => {
+    if (e.ctrlKey && e.key === 's') {
+      e.preventDefault();
+
+    }
+  });
+  
+  app.go();
+})();</script>
+</body>
+</html>
