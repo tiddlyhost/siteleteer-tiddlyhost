@@ -271,7 +271,7 @@ main>section>footer>time::before {
 			info: (el) => ({
 				id: el.id,
 				name: q('h1', el).textContent,
-				src: q('pre', el)?.innerHTML ?? '',
+				src: q('pre', el)?.textContent ?? '',
 			}),
 			show: (el, y = true) => el.style.display = y ? 'block' : '',
 			settingFields: () => Array.from(qa('#settings :is(input, textarea, select)[name]')).map(el => el.name),
@@ -356,7 +356,7 @@ main>section>footer>time::before {
 					form.onsubmit = e => {
 						e.preventDefault();
 						q('h1', pg).textContent = form.name.value.trim();
-						q('pre', pg).innerHTML = form.text.value;
+						q('pre', pg).textContent = form.text.value;
 						q('footer>time', pg).textContent = new Date().toLocaleString();
 						const newSort = parseInt(form.sort.value);
 						if (newSort !== sort) {
