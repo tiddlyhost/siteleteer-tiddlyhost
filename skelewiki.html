@@ -454,6 +454,7 @@ main>section>footer>time::before {
 				});
 			},
 			save() {
+				app.go();
 				const name = q('#wiki #name');
 				const pp = app.pages();
 				pp.forEach(p => {
@@ -464,7 +465,6 @@ main>section>footer>time::before {
 					const edit = gebi(`edit${p.id}`);
 					if (edit) edit.parentElement.removeChild(edit);
 				});
-				app.go();
 				document.title = name;
 				const html = /*html*/`<!DOCTYPE html><html lang="en">
 <head>${document.head.innerHTML}</head>
