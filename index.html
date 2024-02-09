@@ -237,6 +237,7 @@ mark {
       name: q('h1', el).textContent,
       src: q('pre', el)?.innerHTML ?? '',
     }),
+    p: () => new URL(location).searchParams.get('p'),
     show: (el, y = true) => el.style.display = y ? 'block' : '',
     settingFields: () => Array.from(qa('#settings :is(input, textarea, select)[name]')).map(el => el.name),
     handleTab: () => {
@@ -265,7 +266,13 @@ mark {
       pp.forEach(el => app.show(el, false));
       const pg = gebi(page) ?? pp.find(el => app.info(el).name === page) ?? pp[0];
       if (pg) {
-        document.title = app.info(pg).name;
+        const { name } = app.info(pg);
+        document.title = name;
+        const p = app.p();
+        if (name && name != p) {
+          history.pushState(history.state, 0, `${location.pathname}?p=${encodeURIComponent(name)}`);
+          app.param = name;
+        }
         app.show(pg);
       }
     },
@@ -439,9 +446,12 @@ mark {
       app.save();
     }
   });
+  w.addEventListener('popstate', e => {
+    app.go(app.p());
+  });
   
   app.render();
-  app.go();
+  app.go(app.p());
 })();</script>
 <script id="md">
 /**
