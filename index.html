@@ -35,7 +35,7 @@
 }
 *[hidden],
 dialog:not([open]),
-main > section,
+main>section,
 #searchResults:empty {
   display: none;
 }
@@ -43,9 +43,14 @@ dialog[open] {
   display: block;
   background: var(--bg);
 }
-html { background-color: var(--bg); }
-body { background: transparent; }
-body > header, #settings {
+html {
+  background-color: var(--bg);
+}
+body {
+  background: transparent;
+}
+body>header,
+#settings {
   padding: var(--space) 0.25rem;
   width: 100%;
   max-width: var(--max-width);
@@ -56,16 +61,21 @@ main {
 }
 nav ul li a:empty::after,
 main:empty::after,
-main > section article:empty::after {
+main>section article:empty::after {
   content: "No content";
 }
-main > section > header > h1, form h1 {
+main>section>header>h1,
+form h1 {
   margin: 0 0 var(--space);
 }
-* + * {
+*+* {
   margin: var(--space) 0 0;
 }
-#wiki a, #wiki a * {
+main>section+section {
+  margin: 0;
+}
+#wiki a,
+#wiki a * {
   color: var(--accent1);
 }
 #wiki #desc {
@@ -76,18 +86,37 @@ main > section > header > h1, form h1 {
   gap: var(--space);
   align-items: center;
 }
-#actions > * {
+#actions>* {
   flex: 1;
 }
-h1 { font-size: 2.2rem; }
-h2 { font-size: 1.8rem; }
-h3, #wiki #name { font-size: 1.5rem; }
-h4 { font-size: 1.15rem; }
-h1, h2, h3, h4, h5, #wiki #name {
+h1 {
+  font-size: 2.2rem;
+}
+h2 {
+  font-size: 1.8rem;
+}
+h3,
+#wiki #name {
+  font-size: 1.5rem;
+}
+h4 {
+  font-size: 1.15rem;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+#wiki #name {
   font-weight: bold;
 }
-h5, h6 { font-style: italic; }
-h6 { font-weight: normal; }
+h5,
+h6 {
+  font-style: italic;
+}
+h6 {
+  font-weight: normal;
+}
 a {
   color: var(--accent2);
 }
@@ -115,7 +144,10 @@ label {
   display: block;
   font-weight: 500;
 }
-input, textarea, select, option {
+input,
+textarea,
+select,
+option {
   border-radius: 0px;
   padding: var(--space);
   background: var(--bg);
@@ -143,7 +175,9 @@ nav ul li {
 .sm {
   font-size: 0.8em;
 }
-#searchBar{ position: relative; }
+#searchBar {
+  position: relative;
+}
 #searchResults {
   position: absolute;
   background: var(--bg);
@@ -178,449 +212,455 @@ mark {
 </head>
 <body>
 <header>
-  <section id="wiki">
-    <a href="javascript:app.go()" id="name">SkeleWiki</a>
-    <span id="desc">A <em>dead</em> simple tool to make bare <em>bones</em> multi-page content in a single HTML file.</span>
-  </section>
-  <section id="actions">
-    <div id="searchBar" style="flex:1;">
-      <label>
-        <strong>Search</strong> <input type="search" oninput="app.search(event.target.value)">
-      </label>
-      <div id="searchResults"></div>
-    </div>
-    <div style="flex:2;" class="t-right">
-      <button id="settingsButton" class="dull" onclick="app.settings()">Settings</button>
-      <button id="newPageButton" class="other" onclick="app.add()">New Page</button>
-      <button id="saveButton" onclick="app.save()">Save</button>
-    </div>
-  </section>
-  <nav>
-    <ul></ul>
-  </nav>
+	<section id="wiki">
+		<a href="javascript:app.go()" id="name">SkeleWiki</a>
+		<span id="desc">A <em>dead</em> simple tool to make bare <em>bones</em> multi-page content in a single HTML
+			file.</span>
+	</section>
+	<section id="actions">
+		<div id="searchBar" style="flex:1;">
+			<label>
+				<strong>Search</strong> <input type="search" oninput="app.search(event.target.value)">
+			</label>
+			<div id="searchResults"></div>
+		</div>
+		<div style="flex:2;" class="t-right">
+			<button id="settingsButton" class="dull" onclick="app.settings()">Settings</button>
+			<button id="newPageButton" class="other" onclick="app.add()">New Page</button>
+			<button id="saveButton" onclick="app.save()">Save</button>
+		</div>
+	</section>
+	<nav>
+		<ul></ul>
+	</nav>
 </header>
 <dialog id="settings">
-  <h1>Settings</h1>
-  <form method="dialog" onsubmit="app.update(event.target)">
-    <label>
-      Wiki Name<br>
-      <input name="name">
-    </label>
-    <label>
-      Wiki Description<br>
-      <input name="desc">
-    </label>
-    <label>
-      Wiki CSS<br>
-      <textarea name="css"></textarea>
-    </label>
-    <footer>
-      <button type="submit">Save</button>
-      <button type="button" class="dull" onclick="app.settings(true)">Cancel</button>
-    </footer>
-  </form>
+	<h1>Settings</h1>
+	<form method="dialog" onsubmit="app.update(event.target)">
+		<label>
+			Wiki Name<br>
+			<input name="name">
+		</label>
+		<label>
+			Wiki Description<br>
+			<input name="desc">
+		</label>
+		<label>
+			Wiki CSS<br>
+			<textarea name="css"></textarea>
+		</label>
+		<footer>
+			<button type="submit">Save</button>
+			<button type="button" class="dull" onclick="app.settings(true)">Cancel</button>
+		</footer>
+	</form>
 </dialog>
 <main></main>
-<script defer>(()=>{
-  const w = window;
-  w.q = (s, e) => (e ?? document).querySelector(s);
-  w.qa = (s, e) => (e ?? document).querySelectorAll(s);
-  w.gebi = i => document.getElementById(i);
-  w.ce = t => document.createElement(t);
-  w.main = q('main');
-  w.nav = q('nav ul');
+<script defer>(() => {
+		const w = window;
+		w.q = (s, e) => (e ?? document).querySelector(s);
+		w.qa = (s, e) => (e ?? document).querySelectorAll(s);
+		w.gebi = i => document.getElementById(i);
+		w.ce = t => document.createElement(t);
+		w.main = q('main');
+		w.nav = q('nav ul');
+		w.h = (hash) => (!hash ? true : location.hash = hash) && (!location.hash ? null : decodeURIComponent(location.hash.substring(1)));
 
-  w.app = {
-    pages: () => Array.from(qa('main > section')),
-    info: (el) => ({
-      id: el.id,
-      name: q('h1', el).textContent,
-      src: q('pre', el)?.innerHTML ?? '',
-    }),
-    p: () => new URL(location).searchParams.get('p'),
-    show: (el, y = true) => el.style.display = y ? 'block' : '',
-    settingFields: () => Array.from(qa('#settings :is(input, textarea, select)[name]')).map(el => el.name),
-    handleTab: () => {
-      qa('textarea:not(.notab)').forEach(t => t.onkeydown = function(e) {
-        if (e.key === 'Tab') {
-          const s = this;
-          const tab = '\t';
-          if (t !== s) s.focus();
-          const safeInsert = document.execCommand('insertText', false, tab);
-          if (!safeInsert) {
-            s.setRangeText(tab, s.selectionStart || 0, s.selectionEnd || 0, 'end');
-            s.dispatchEvent(new InputEvent('input', { tab, inputType: 'insertText' }));
-          }
-          e.preventDefault();
-        }
-      });
-    },
-    navItem(el) {
-      const { id, name } = app.info(el);
-      const li = ce('li');
-      li.innerHTML = /*html*/`<a href="javascript:app.go('${id}')" id="nav${id}">${name}</a>`;
-      return li;
-    },
-    go(page) {
-      const pp = app.pages();
-      pp.forEach(el => app.show(el, false));
-      const pg = gebi(page) ?? pp.find(el => app.info(el).name === page) ?? pp[0];
-      if (pg) {
-        const { name } = app.info(pg);
-        document.title = name;
-        const p = app.p();
-        if (name && name != p) {
-          history.pushState(history.state, 0, `${location.pathname}?p=${encodeURIComponent(name)}`);
-          app.param = name;
-        }
-        app.show(pg);
-      }
-    },
-    settings(close = false) {
-      const s = q('#settings');
-      if (close) {
-        s.close();
-        return;
-      }
-      const form = q('form', s);
-      app.settingFields().forEach(k => {
-        form[k].value = q('#'+k)?.innerHTML?.trim() ?? '';
-      });
-      app.handleTab();
-      s.show();
-    },
-    update(form) {
-      app.settingFields().forEach(k => {
-        q('#'+k).innerHTML = form[k].value;
-      });
-    },
-    edit(id, y = true) {
-      const pg = gebi(id);
-      if (pg) {
-        const { name, src } = app.info(pg);
-        const eId = `edit${id}`;
-        if (!y) {
-          const form = q(`#${eId}`);
-          app.render(!form ? null : id); // If the page was re-sorted, re-render everything so nav updates as well
-          app.show(pg);
-          if (form) form.parentElement.removeChild(form);
-          return;
-        }
-        app.go(id);
-        app.show(pg, false);
-        const pages = app.pages();
-        const sort = pages.findIndex(p => p.id === id);
-        const form = ce('form');
-        form.id = eId;
-        form.innerHTML = /*html*/`<h1>Edit</h1>
-        <label>Name <input name="name" value="${name}"></label>
-        <label>Markdown Content<br><textarea name="text">${src}</textarea></label>
-        <label>Sort Position <select name="sort">${pages.map((p, i) => `<option${i === sort ? ' selected' : ''}>${i}</option>`).join('')}</select></label>
-        <footer><button type="submit">Save</button> <button type="button" class="dull" onclick="app.edit(${id}, false)">Cancel</button> <button type="button" class="bad" onclick="app.delete(${id})">Delete</button></footer>`;
-        form.onsubmit = e => {
-          e.preventDefault();
-          q('h1', pg).textContent = form.name.value.trim();
-          q('pre', pg).innerHTML = form.text.value;
-          const newSort = parseInt(form.sort.value);
-          if (newSort !== sort) {
-            const el = pages.splice(sort, 1);
-            pages.splice(newSort, 0, el[0]);
-            main.innerHTML = '';
-            pages.forEach(p => main.appendChild(p));
-          }
-          app.edit(id, false);
-        };
-        pg.parentElement.insertBefore(form, pg);
-        app.handleTab();
-        form.name.focus();
-      }
-    },
-    add() {
-      p = document.createElement('section');
-      p.id = Date.now();
-      p.innerHTML = /*html*/`<header><h1></h1></header><pre hidden></pre><article></article><footer><time>${new Date().toString()}</time> <button class="dull editButton" onclick="app.edit(${p.id})">Edit</edit></footer>`;
-      main.appendChild(p);
-      nav.appendChild(app.navItem(p));
-      app.edit(p.id);
-    },
-    delete(id) {
-      if (confirm('Delete page?')) {
-        const p = gebi(id);
-        if (p) p.parentElement.removeChild(p);
-        const na = gebi(`nav${id}`);
-        if (na) na.nearest('ul').removeChild(na.parentElement);
-        const e = gebi(`edit${id}`);
-        if (e) e.parentElement.removeChild(e);
-        app.go();
-      }
-    },
-    search(term) {
-      const resultsEl = q('#searchResults');
-      clearTimeout(resultsEl.debounce);
-      resultsEl.debounce = setTimeout(() => {
-        resultsEl.innerHTML = '';
-        if (!term) return;
-        const lcTerm = term.toLowerCase();
-        const matches = app.pages().map(p => {
-          const i = app.info(p);
-          const temp = ce('div');
-          temp.innerHTML = md(i.src);
-          i.text = temp.textContent;
-          return i;
-        })
-          // Get only pages that contain the search term anywhere in any form
-          .filter(({ name, text }) => `${name} ${text}`.match(new RegExp(term, 'i')) !== null)
-          .sort((a, b) => {
-            const aText = `${a.name} ${a.text}`;
-            const bText = `${b.name} ${b.text}`;
-            const aIndex = aText.indexOf(term);
-            let aIndexCI = aText.toLowerCase().indexOf(lcTerm);
-            if (aIndexCI < 0) aIndexCI = Infinity;
-            const bIndex = bText.indexOf(term);
-            let bIndexCI = bText.toLowerCase().indexOf(lcTerm);
-            if (bIndexCI < 0) bIndexCI = Infinity;
-            if (aIndex >= 0 && bIndex < 0) return -1;
-            if (aIndex < 0 && bIndex >= 0) return -1;
-            if (aIndex < 0 && bIndex < 0) {
-              if (aIndexCI === bIndexCI) return 0;
-              return aIndexCI < bIndexCI ? -1 : 1;
-            }
-            if (aIndex === bIndex) return 0;
-            return aIndex < bIndex ? -1 : 1;
-          }).forEach((p) => {
-            const mark = t => t.replace(new RegExp(`(${term})`, 'i'), '<mark>$1</mark>');
-            const name = mark(p.name);
-            const i = p.text.toLowerCase().indexOf(lcTerm);
-            const preview = p.text.length < 1 ? '' : p.text.substring(Math.max(0, i - 10), Math.min(100, p.text.length, i + term.length + 10));
-            resultsEl.innerHTML += /*html*/`<a href="javascript:app.go(${p.id})">${name}<p class="sm">${mark(preview)}</p></a>`;
-          });
-      }, 300);
-    },
-    render(pgId = null) {
-      if (!pgId) nav.innerHTML = '';
-      const pages = app.pages();
-      (!pgId ? pages : [gebi(pgId)]).forEach(p => {
-        const { id, name, src } = app.info(p);
-        q('pre', p).setAttribute('hidden', '');
-        const a = q('article', p);
-        const content = src.replace(/\[\[([^\]\|]+)(\|[^\]]+)?\]\]/g, (m, name, text) => {
-          return `<a href="javascript:app.go('${name}')">${text ? text.substring(1) : name}</a>`;
-        });
-        a.innerHTML = md(content);
-        a.removeAttribute('hidden');
-        if (!pgId) {
-          nav.appendChild(app.navItem(p));
-        } else {
-          gebi(`nav${id}`).textContent = name;
-        }
-      });
-    },
-    save() {
-      const pp = app.pages();
-      pp.forEach(p => {
-        const txt = q('pre', p).removeAttribute('hidden');
-        const a = q('article', p);
-        a.setAttribute('hidden', true);
-        a.innerHTML = '';
-        const edit = gebi(`edit${p.id}`);
-        if (edit) edit.parentElement.removeChild(edit);
-      });
-      const html = /*html*/`<!DOCTYPE html><html lang="en">
+		w.app = {
+			current: null,
+			pages: () => Array.from(qa('main > section')),
+			info: (el) => ({
+				id: el.id,
+				name: q('h1', el).textContent,
+				src: q('pre', el)?.innerHTML ?? '',
+			}),
+			show: (el, y = true) => el.style.display = y ? 'block' : '',
+			settingFields: () => Array.from(qa('#settings :is(input, textarea, select)[name]')).map(el => el.name),
+			handleTab: () => {
+				qa('textarea:not(.notab)').forEach(t => t.onkeydown = function (e) {
+					if (e.key === 'Tab') {
+						const s = this;
+						const tab = '\t';
+						if (t !== s) s.focus();
+						const safeInsert = document.execCommand('insertText', false, tab);
+						if (!safeInsert) {
+							s.setRangeText(tab, s.selectionStart || 0, s.selectionEnd || 0, 'end');
+							s.dispatchEvent(new InputEvent('input', { tab, inputType: 'insertText' }));
+						}
+						e.preventDefault();
+					}
+				});
+			},
+			navItem(el) {
+				const { id, name } = app.info(el);
+				const li = ce('li');
+				li.innerHTML = /*html*/`<a href="javascript:app.go('${id}')" id="nav${id}">${name}</a>`;
+				return li;
+			},
+			go(page, back = false) {
+				if (app.current) app.edit(app.current, false);
+				const pp = app.pages();
+				pp.forEach(el => app.show(el, false));
+				const pg = gebi(page) ?? pp.find(el => app.info(el).name === page) ?? pp[0];
+				if (pg) {
+					const { name } = app.info(pg);
+					document.title = name;
+					if (!back) h(name);
+					app.show(pg);
+					app.current = pg.id;
+				} else {
+					if (!back) location.hash = '';
+					else location.replace(location.pathname);
+				}
+			},
+			settings(close = false) {
+				const s = q('#settings');
+				if (close) {
+					s.close();
+					return;
+				}
+				const form = q('form', s);
+				app.settingFields().forEach(k => {
+					form[k].value = q('#' + k)?.innerHTML?.trim() ?? '';
+				});
+				app.handleTab();
+				s.show();
+			},
+			update(form) {
+				app.settingFields().forEach(k => {
+					q('#' + k).innerHTML = form[k].value;
+				});
+			},
+			edit(id, y = true) {
+				const pg = gebi(id);
+				if (pg) {
+					const { name, src } = app.info(pg);
+					const eId = `edit${id}`;
+					if (!y) {
+						const form = q(`#${eId}`);
+						app.render(!form ? null : id); // If the page was re-sorted, re-render everything so nav updates as well
+						app.show(pg);
+						if (form) form.parentElement.removeChild(form);
+						return;
+					}
+					app.go(id);
+					app.show(pg, false);
+					const pages = app.pages();
+					const sort = pages.findIndex(p => p.id == id);
+					const form = ce('form');
+					form.id = eId;
+					form.innerHTML = /*html*/`<h1>Edit</h1>
+			<label>Name <input name="name" value="${name}"></label>
+			<label>Markdown Content<br><textarea name="text">${src}</textarea></label>
+			<label>Sort Position <select name="sort">${pages.map((p, i) => `<option${i === sort ? ' selected' : ''}>${i}</option>`).join('')}</select></label>
+			<footer><button type="submit">Save</button> <button type="button" class="dull" onclick="app.edit(${id}, false)">Cancel</button> <button type="button" class="bad" onclick="app.delete(${id})">Delete</button></footer>`;
+					form.onsubmit = e => {
+						e.preventDefault();
+						q('h1', pg).textContent = form.name.value.trim();
+						q('pre', pg).innerHTML = form.text.value;
+						const newSort = parseInt(form.sort.value);
+						if (newSort !== sort) {
+							const el = pages.splice(sort, 1);
+							pages.splice(newSort, 0, el[0]);
+							main.innerHTML = '';
+							pages.forEach(p => main.appendChild(p));
+						}
+						app.edit(id, false);
+					};
+					pg.parentElement.insertBefore(form, pg);
+					app.handleTab();
+					form.name.focus();
+				}
+			},
+			add() {
+				p = document.createElement('section');
+				p.id = Date.now();
+				p.innerHTML = /*html*/`<header><h1></h1></header><pre hidden></pre><article></article><footer><time>${new Date().toString()}</time> <button class="dull editButton" onclick="app.edit(${p.id})">Edit</edit></footer>`;
+				main.appendChild(p);
+				nav.appendChild(app.navItem(p));
+				app.edit(p.id);
+			},
+			delete(id) {
+				if (confirm('Delete page?')) {
+					const p = gebi(id);
+					if (p) p.parentElement.removeChild(p);
+					const na = gebi(`nav${id}`);
+					if (na) na.closest('ul').removeChild(na.parentElement);
+					const e = gebi(`edit${id}`);
+					if (e) e.parentElement.removeChild(e);
+					app.go();
+				}
+			},
+			search(term) {
+				const resultsEl = q('#searchResults');
+				clearTimeout(resultsEl.debounce);
+				resultsEl.debounce = setTimeout(() => {
+					resultsEl.innerHTML = '';
+					if (!term) return;
+					const lcTerm = term.toLowerCase();
+					const matches = app.pages().map(p => {
+						const i = app.info(p);
+						const temp = ce('div');
+						temp.innerHTML = md(i.src);
+						i.text = temp.textContent;
+						return i;
+					})
+						// Get only pages that contain the search term anywhere in any form
+						.filter(({ name, text }) => `${name} ${text}`.match(new RegExp(term, 'i')) !== null)
+						.sort((a, b) => {
+							const aText = `${a.name} ${a.text}`;
+							const bText = `${b.name} ${b.text}`;
+							const aIndex = aText.indexOf(term);
+							let aIndexCI = aText.toLowerCase().indexOf(lcTerm);
+							if (aIndexCI < 0) aIndexCI = Infinity;
+							const bIndex = bText.indexOf(term);
+							let bIndexCI = bText.toLowerCase().indexOf(lcTerm);
+							if (bIndexCI < 0) bIndexCI = Infinity;
+							if (aIndex >= 0 && bIndex < 0) return -1;
+							if (aIndex < 0 && bIndex >= 0) return -1;
+							if (aIndex < 0 && bIndex < 0) {
+								if (aIndexCI === bIndexCI) return 0;
+								return aIndexCI < bIndexCI ? -1 : 1;
+							}
+							if (aIndex === bIndex) return 0;
+							return aIndex < bIndex ? -1 : 1;
+						}).forEach((p) => {
+							const mark = t => t.replace(new RegExp(`(${term})`, 'i'), '<mark>$1</mark>');
+							const name = mark(p.name);
+							const i = p.text.toLowerCase().indexOf(lcTerm);
+							const preview = p.text.length < 1 ? '' : p.text.substring(Math.max(0, i - 10), Math.min(100, p.text.length, i + term.length + 10));
+							resultsEl.innerHTML += /*html*/`<a href="javascript:app.go(${p.id})">${name}<p class="sm">${mark(preview)}</p></a>`;
+						});
+				}, 300);
+			},
+			render(pgId = null) {
+				if (!pgId) nav.innerHTML = '';
+				const pages = app.pages();
+				(!pgId ? pages : [gebi(pgId)]).forEach(p => {
+					const { id, name, src } = app.info(p);
+					q('pre', p).setAttribute('hidden', '');
+					const a = q('article', p);
+					const content = src.replace(/\[\[([^\]\|]+)(\|[^\]]+)?\]\]/g, (m, name, text) => {
+						return `<a href="javascript:app.go('${name}')">${text ? text.substring(1) : name}</a>`;
+					});
+					a.innerHTML = md(content);
+					a.removeAttribute('hidden');
+					if (!pgId) {
+						nav.appendChild(app.navItem(p));
+					} else {
+						gebi(`nav${id}`).textContent = name;
+					}
+				});
+			},
+			save() {
+				const pp = app.pages();
+				pp.forEach(p => {
+					const txt = q('pre', p).removeAttribute('hidden');
+					const a = q('article', p);
+					a.setAttribute('hidden', true);
+					a.innerHTML = '';
+					const edit = gebi(`edit${p.id}`);
+					if (edit) edit.parentElement.removeChild(edit);
+				});
+				const current = h();
+				app.go();
+				const html = /*html*/`<!DOCTYPE html><html lang="en">
 <head>${document.head.innerHTML}</head>
 <body>${document.body.innerHTML}</body></html>`;
-      app.render();
-      
-      const el = document.createElement('a');
-      el.setAttribute('href', 'data:text/html;charset=utf-8,' + encodeURIComponent(html));
-      const filename = q('#wiki #name').textContent.toLowerCase().replace(/\W/g, '_') + '.html';
-      el.setAttribute('download', filename);
-      document.body.appendChild(el);
-      el.click();
-      document.body.removeChild(el);
-    },
-  };
-  
-  w.addEventListener('keydown', e => {
-    if (e.ctrlKey && e.key === 's') {
-      e.preventDefault();
-      app.save();
-    }
-  });
-  w.addEventListener('popstate', e => {
-    app.go(app.p());
-  });
-  
-  app.render();
-  app.go(app.p());
-})();</script>
-<script id="md">
-/**
- * Modified beyond recognition from md.js, a lightweight markdown parser
- * https://github.com/thysultan/md.js
- * 
- * @licence MIT
- */
-/**
- * Supports Markdown Features:
- * - HTML
- * - headings h1–h6+ (# h1, ## h2, ### h3, etc.)
- * - paragraphs (\n\n)
- * - line breaks (  \n)
- * - blockquotes (> text)
- * - horizontal rule (---, ***, - - -, * * *)
- * - code blocks (```)
- * - inline code (`code`)
- * - images with alt text & optional title (![alt](image_src "optional title"))
- * - inline Markdown links with optional title ([link text](link_url "optional title"))
- * - auto links & email linking (<http://url.domain>, <person@email.example>)
- * - lists with indentation (- list item, * list item, + list item)
- * - checkboxes ([ ], [x])
- * - bold, italic (**bold**, __bold__, *italic*, _italic_, ***bold & italic***, ___bold & italic___, **_bold & italic_**, etc.)
- * - strikethrough (~~strikethrough~~)
- * - escaped characters (\*, \_)
- */
-/**
- * markdown parser
- * 
- * @param  {string} markdown
- * @return {string}
- */
-function md (markdown) {
-  if (!markdown) {
-    return '';
-  }
+				app.render();
+				history.back();
 
-  const charMap = {
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;',
-    '&': '&amp;',
-    '[': '&#91;',
-    ']': '&#93;',
-    '(': '&#40;',
-    ')': '&#41;',
-    '_': '&#95;',
-    '*': '&ast;',
-    '`': '&#96;',
-  };
-  // Save non-& charMap values without `&` to more easily check for double-escaped htmlEntity values
-  const doubleEscaped = Object.keys(charMap).filter(c => c != '&').map(c => charMap[c].replace(c != '&' ? '&' : '', ''));
+				const el = document.createElement('a');
+				el.setAttribute('href', 'data:text/html;charset=utf-8,' + encodeURIComponent(html));
+				const filename = q('#wiki #name').textContent.toLowerCase().replace(/\W/g, '_') + '.html';
+				el.setAttribute('download', filename);
+				document.body.appendChild(el);
+				el.click();
+				document.body.removeChild(el);
+			},
+		};
 
-  const htmlEntity = str => {
-    return str.replace(/[<>&\(\)\[\]"']/g, c => (charMap[c] || c))
-      .replace(new RegExp(`&amp;(${doubleEscaped.join('|')})`, 'g'), '&$1');
-  }
+		w.addEventListener('keydown', e => {
+			if (e.ctrlKey && e.key === 's') {
+				e.preventDefault();
+				app.save();
+			}
+		});
+		w.addEventListener('popstate', e => {
+			app.go(h(), true);
+		});
 
-  var code = [];
-  var cIdx = 0; // Code index
-  var html = [];
-  var hIdx = 0; // HTML index
-  var length = markdown.length;
+		app.render();
+		app.go(h());
+	})();
 
-  // to allow matching trailing paragraphs
-  if (markdown[length-1] !== '\n' && markdown[length-2] !== '\n') {
-    markdown += '\n\n';
-  }
+	/**
+	 * Modified beyond recognition from md.js, a lightweight markdown parser
+	 * https://github.com/thysultan/md.js
+	 * 
+	 * @licence MIT
+	 */
+	/**
+	 * Supports Markdown Features:
+	 * - HTML
+	 * - headings h1–h6+ (# h1, ## h2, ### h3, etc.)
+	 * - paragraphs (\n\n)
+	 * - line breaks (  \n)
+	 * - blockquotes (> text)
+	 * - horizontal rule (---, ***, - - -, * * *)
+	 * - code blocks (```)
+	 * - inline code (`code`)
+	 * - images with alt text & optional title (![alt](image_src "optional title"))
+	 * - inline Markdown links with optional title ([link text](link_url "optional title"))
+	 * - auto links & email linking (<http://url.domain>, <person@email.example>)
+	 * - lists with indentation (- list item, * list item, + list item)
+	 * - checkboxes ([ ], [x])
+	 * - bold, italic (**bold**, __bold__, *italic*, _italic_, ***bold & italic***, ___bold & italic___, **_bold & italic_**, etc.)
+	 * - strikethrough (~~strikethrough~~)
+	 * - escaped characters (\*, \_)
+	 */
+	/**
+	 * markdown parser
+	 * 
+	 * @param  {string} markdown
+	 * @return {string}
+	 */
+	function md(markdown) {
+		if (!markdown) {
+			return '';
+		}
 
-  // format, removes tabs, leading and trailing spaces
-  markdown = (
-    markdown
-      // escaped characters
-      .replace(/\\(.)/g, (m, c) => (charMap[c] || m))
-      // collect code blocks and replace with placeholder
-      // we do this to avoid code blocks matching the paragraph regexp
-      .replace(/```(.*)\n([^\0]+?)```(?!```)/gm, (m, lang, block) => {
-        code[cIdx] = {lang, block: htmlEntity(block)};
-        return `{code-${cIdx++}}`;
-      })
-      // inline code
-      .replace(/`([^`]+?)`/g, (m, code) => `<code>${ htmlEntity(code) }</code>`)
-      // auto links
-      .replace(/<([^>\s]+(\/\/|@)[^>\s]+)>/g, (m, url, method) => `[${ url }](${ method === '@' ? 'mailto:' : '' }${url})`)
-      // links
-      .replace(/(!?)\[([^\]]*?)\]\(([^\s\n]*)(?:| "(.*)")\)/gm, (m, img, text, url, title) => {
-        text = htmlEntity(text);
-        // try to decode url before re-encoding it in case it has encoded values to prevent encoding the % character
-        try { url = decodeURI(url); } catch {} // using try/catch because a malformed URI throws an error
-        url = encodeURI(url);
-        title = title ? ` title="${ htmlEntity(title) }"` : '';
-        if (img) return `<img src="${ url }" alt="${text}"${title}>`;
-        return `<a href="${ url }"${ title }>${ text }</a>`;
-      })
-      // HTML tags
-      .replace(/(<\/?[a-zA-Z]+[^>]*>)/gm, (m, tag) => {
-        html[hIdx] = tag;
-        return `{html-${hIdx++}}`;
-      })
-      // blockquotes
-      .replace(/^[ \t]*>+ (.*)/gm, '<blockquote>\n$1\n</blockquote>')
-      .replace(/(<\/blockquote>\n?<blockquote>)+?/g, '')
-      // headings
-      .replace(/^(#+) +(.*)/gm, (m, hash, content) => `<h${ hash.length }>${ content }</h${ hash.length }>`)
-      // headings h1 (commonmark)
-      .replace(/^([^\n\t ])(.*)\n====+/gm, '<h1>$1$2</h1>')
-      // headings h2 (commonmark)
-      .replace(/^([^\n\t ])(.*)\n----+/gm, '<h2>$1$2</h2>')
-      // horizontal rule 
-      .replace(/\n( *[-*]){3,}\n/gm, '<hr>')
-      // checkboxes
-      .replace(/\[( |x)\]/g, (m, checked) => `<input type="checkbox" disabled${ checked.toLowerCase() === 'x' ? ' checked' : '' }>`)
-      // line breaks
-      .replace(/  +\n/gm, '<br>')
-      // paragraphs - exclude lists, already-rendered HTML, & whitespace
-      .replace(/^([^-\+\*\d<\t \n])([^]*?)(?:\n\n)/gm, (m, leadingCharacter, body) => `<p>${ leadingCharacter }${ body }</p>\n`)
-      // lists
-      .replace(/^([\t ]*)(?:(-|\+|\*)|(\d+(?:\)|\.))) (.*)/gm, (m, leading, b, numbered, content) => {
-        leading = leading.replace(/  /g, '\t');
-        const type = numbered ? 'o' : 'u';
-        return `${leading}<${type}l><li>${content}</li></${type}l>`;
-      })
-  );
+		const charMap = {
+			'<': '&lt;',
+			'>': '&gt;',
+			'"': '&quot;',
+			"'": '&#39;',
+			'&': '&amp;',
+			'[': '&#91;',
+			']': '&#93;',
+			'(': '&#40;',
+			')': '&#41;',
+			'_': '&#95;',
+			'*': '&ast;',
+			'`': '&#96;',
+		};
+		// Save non-& charMap values without `&` to more easily check for double-escaped htmlEntity values
+		const doubleEscaped = Object.keys(charMap).filter(c => c != '&').map(c => charMap[c].replace(c != '&' ? '&' : '', ''));
 
-  // This handles *almost* all combinations, but some indented lists combining ul & ol don't render right
-  var indentListRegExp = /<\/li><\/(u|o)l>\n(\t+)<(u|o)l><li>(.*)<\/li><\/(u|o)l>/;
-  while (markdown.match(indentListRegExp)) {
-    markdown = markdown.replace(indentListRegExp, function(m, parentEnd, tabs, childStart, content, childEnd) {
-      if (tabs.length > 0) {
-        tabs = tabs.substring(1);
-        if (tabs.length > 0) tabs = '\n' + tabs;
-      }
-      return `${tabs}<${childStart}l><li>${content}</li></${childEnd}l></li></${parentEnd}l>`;
-    });
-  }
+		const htmlEntity = str => {
+			return str.replace(/[<>&\(\)\[\]"']/g, c => (charMap[c] || c))
+				.replace(new RegExp(`&amp;(${doubleEscaped.join('|')})`, 'g'), '&$1');
+		}
 
-  markdown = (
-    markdown
-  // Combine lists
-      .replace(/(<\/ul>\n?[ \t]*<ul>)+?/g, '')
-      .replace(/(<\/ol>\n?[ \t]*<ol>)+?/g, '')
-      // strong
-      .replace(/\*\*([^\n*]+?)\*\*/g, '<strong>$1</strong>')
-      .replace(/__([^\n_]+?)__/g, '<strong>$1</strong>')
-      // emphasis
-      .replace(/\*([^\n*]+?)\*/g, '<em>$1</em>')
-      .replace(/_([^\n_]+?)_/g, '<em>$1</em>')
-      // strike through
-      .replace(/(?:~~)([^~]+?)(?:~~)/g, '<del>$1</del>')
-  );
+		var code = [];
+		var cIdx = 0; // Code index
+		var html = [];
+		var hIdx = 0; // HTML index
+		var length = markdown.length;
 
-  // replace html tag placeholders
-  for (let i = 0; i < hIdx; i++) {
-    markdown = markdown.replace(`{html-${i}}`, html[i]);
-  }
+		// to allow matching trailing paragraphs
+		if (markdown[length - 1] !== '\n' && markdown[length - 2] !== '\n') {
+			markdown += '\n\n';
+		}
 
-  // replace code block placeholders
-  for (let i = 0; i < cIdx; i++) {
-    const { lang, block } = code[i];
-    markdown = markdown.replace(
-      `{code-${i}}`,
-      `<pre><code${lang ? ` class="language-${ lang }"` : ''}>${htmlEntity(block)}</code></pre>`
-    );
-  }
+		// format, removes tabs, leading and trailing spaces
+		markdown = (
+			markdown
+				// escaped characters
+				.replace(/\\(.)/g, (m, c) => (charMap[c] || m))
+				// collect code blocks and replace with placeholder
+				// we do this to avoid code blocks matching the paragraph regexp
+				.replace(/```(.*)\n([^\0]+?)```(?!```)/gm, (m, lang, block) => {
+					code[cIdx] = { lang, block: htmlEntity(block) };
+					return `{code-${cIdx++}}`;
+				})
+				// inline code
+				.replace(/`([^`]+?)`/g, (m, code) => `<code>${htmlEntity(code)}</code>`)
+				// auto links
+				.replace(/<([^>\s]+(\/\/|@)[^>\s]+)>/g, (m, url, method) => `[${url}](${method === '@' ? 'mailto:' : ''}${url})`)
+				// links
+				.replace(/(!?)\[([^\]]*?)\]\(([^\s\n]*)(?:| "(.*)")\)/gm, (m, img, text, url, title) => {
+					text = htmlEntity(text);
+					// try to decode url before re-encoding it in case it has encoded values to prevent encoding the % character
+					try { url = decodeURI(url); } catch { } // using try/catch because a malformed URI throws an error
+					url = encodeURI(url);
+					title = title ? ` title="${htmlEntity(title)}"` : '';
+					if (img) return `<img src="${url}" alt="${text}"${title}>`;
+					return `<a href="${url}"${title}>${text}</a>`;
+				})
+				// HTML tags
+				.replace(/(<\/?[a-zA-Z]+[^>]*>)/gm, (m, tag) => {
+					html[hIdx] = tag;
+					return `{html-${hIdx++}}`;
+				})
+				// blockquotes
+				.replace(/^[ \t]*>+ (.*)/gm, '<blockquote>\n$1\n</blockquote>')
+				.replace(/(<\/blockquote>\n?<blockquote>)+?/g, '')
+				// headings
+				.replace(/^(#+) +(.*)/gm, (m, hash, content) => `<h${hash.length}>${content}</h${hash.length}>`)
+				// headings h1 (commonmark)
+				.replace(/^([^\n\t ])(.*)\n====+/gm, '<h1>$1$2</h1>')
+				// headings h2 (commonmark)
+				.replace(/^([^\n\t ])(.*)\n----+/gm, '<h2>$1$2</h2>')
+				// horizontal rule 
+				.replace(/\n( *[-*]){3,}\n/gm, '<hr>')
+				// checkboxes
+				.replace(/\[( |x)\]/g, (m, checked) => `<input type="checkbox" disabled${checked.toLowerCase() === 'x' ? ' checked' : ''}>`)
+				// line breaks
+				.replace(/  +\n/gm, '<br>')
+				// paragraphs - exclude lists, already-rendered HTML, & whitespace
+				.replace(/^([^-\+\*\d<\t \n])([^]*?)(?:\n\n)/gm, (m, leadingCharacter, body) => `<p>${leadingCharacter}${body}</p>\n`)
+				// lists
+				.replace(/^([\t ]*)(?:(-|\+|\*)|(\d+(?:\)|\.))) (.*)/gm, (m, leading, b, numbered, content) => {
+					leading = leading.replace(/  /g, '\t');
+					const type = numbered ? 'o' : 'u';
+					return `${leading}<${type}l><li>${content}</li></${type}l>`;
+				})
+		);
 
-  return markdown.trim();
-}
+		// This handles *almost* all combinations, but some indented lists combining ul & ol don't render right
+		var indentListRegExp = /<\/li><\/(u|o)l>\n(\t+)<(u|o)l><li>(.*)<\/li><\/(u|o)l>/;
+		while (markdown.match(indentListRegExp)) {
+			markdown = markdown.replace(indentListRegExp, function (m, parentEnd, tabs, childStart, content, childEnd) {
+				if (tabs.length > 0) {
+					tabs = tabs.substring(1);
+					if (tabs.length > 0) tabs = '\n' + tabs;
+				}
+				return `${tabs}<${childStart}l><li>${content}</li></${childEnd}l></li></${parentEnd}l>`;
+			});
+		}
+
+		markdown = (
+			markdown
+				// Combine lists
+				.replace(/(<\/ul>\n?[ \t]*<ul>)+?/g, '')
+				.replace(/(<\/ol>\n?[ \t]*<ol>)+?/g, '')
+				// strong
+				.replace(/\*\*([^\n*]+?)\*\*/g, '<strong>$1</strong>')
+				.replace(/__([^\n_]+?)__/g, '<strong>$1</strong>')
+				// emphasis
+				.replace(/\*([^\n*]+?)\*/g, '<em>$1</em>')
+				.replace(/_([^\n_]+?)_/g, '<em>$1</em>')
+				// strike through
+				.replace(/(?:~~)([^~]+?)(?:~~)/g, '<del>$1</del>')
+		);
+
+		// replace html tag placeholders
+		for (let i = 0; i < hIdx; i++) {
+			markdown = markdown.replace(`{html-${i}}`, html[i]);
+		}
+
+		// replace code block placeholders
+		for (let i = 0; i < cIdx; i++) {
+			const { lang, block } = code[i];
+			markdown = markdown.replace(
+				`{code-${i}}`,
+				`<pre><code${lang ? ` class="language-${lang}"` : ''}>${htmlEntity(block)}</code></pre>`
+			);
+		}
+
+		return markdown.trim();
+	}
 </script>
 </body>
 </html>
