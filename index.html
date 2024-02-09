@@ -6,101 +6,98 @@
 <title>SkeleWiki</title>
 <style id="css">
 :root {
-  --text: #000;
-  --font: serif;
-  --size: 12pt;
-  --space: 0.5rem;
-  --bg: cornsilk;
-  --accent1: olivedrab;
-  --accent2: rebeccapurple;
-  --dull: bisque;
-  --bad: tomato;
-  --button-border: none;
-  --rounded: 3px;
-  --max-width: 1200px;
+	--text: #000;
+	--font: serif;
+	--size: 12pt;
+	--space: 0.5rem;
+	--bg: cornsilk;
+	--accent1: olivedrab;
+	--accent2: rebeccapurple;
+	--dull: bisque;
+	--bad: tomato;
+	--button-border: none;
+	--rounded: 3px;
+	--max-width: 1200px;
 }
 * {
-  font-family: var(--font);
-  color: var(--text);
-  font-size: var(--size);
-  line-height: 1.15em;
-  background-color: transparent;
+	font-family: var(--font);
+	color: var(--text);
+	font-size: var(--size);
+	line-height: 1.15em;
+	background-color: transparent;
 }
 * * {
-  font-family: inherit;
-  color: inherit;
-  font-size: inherit;
-  font-weight: inherit;
-  line-height: inherit;
+	font-family: inherit;
+	color: inherit;
+	font-size: inherit;
+	font-weight: inherit;
+	line-height: inherit;
 }
 *[hidden],
 dialog:not([open]),
 main>section,
 #searchResults:empty {
-  display: none;
+	display: none;
 }
 dialog[open] {
-  display: block;
-  background: var(--bg);
+	display: block;
+	background: var(--bg);
 }
 html {
-  background-color: var(--bg);
+	background-color: var(--bg);
 }
 body {
-  background: transparent;
+	background: transparent;
 }
 body>header,
 #settings {
-  padding: var(--space) 0.25rem;
-  width: 100%;
-  max-width: var(--max-width);
+	padding: var(--space) 0.25rem;
+	width: 100%;
+	max-width: var(--max-width);
 }
 main {
-  padding: var(--space);
-  max-width: var(--max-width);
+	padding: var(--space);
+	max-width: var(--max-width);
 }
 nav ul li a:empty::after,
 main:empty::after,
 main>section article:empty::after {
-  content: "No content";
+	content: "No content";
 }
 main>section>header>h1,
 form h1 {
-  margin: 0 0 var(--space);
+	margin: 0 0 var(--space);
 }
 *+* {
-  margin: var(--space) 0 0;
+	margin: var(--space) 0 0;
 }
 main>section+section {
-  margin: 0;
+	margin: 0;
 }
 #wiki a,
 #wiki a * {
-  color: var(--accent1);
+	color: var(--accent1);
 }
 #wiki #desc {
-  margin-left: var(--space);
+	margin-left: var(--space);
 }
 #actions {
-  display: flex;
-  gap: var(--space);
-  align-items: center;
-}
-#actions>* {
-  flex: 1;
+	display: flex;
+	gap: var(--space);
+	align-items: center;
 }
 h1 {
-  font-size: 2.2rem;
+	font-size: 2.2rem;
 }
 h2 {
-  font-size: 1.8rem;
+	font-size: 1.8rem;
 }
 h3,
 #wiki #name {
-  font-size: 1.5rem;
+	font-size: 1.5rem;
 }
 h4 {
-  font-size: 1.15rem;
+	font-size: 1.15rem;
 }
 h1,
 h2,
@@ -108,105 +105,108 @@ h3,
 h4,
 h5,
 #wiki #name {
-  font-weight: bold;
+	font-weight: bold;
 }
 h5,
 h6 {
-  font-style: italic;
+	font-style: italic;
 }
 h6 {
-  font-weight: normal;
+	font-weight: normal;
 }
 a {
-  color: var(--accent2);
+	color: var(--accent2);
 }
 button {
-  background-color: var(--accent1);
-  color: white;
-  border: var(--button-border);
-  border-radius: var(--rounded);
-  padding: 0.25rem 0.5rem;
-  cursor: pointer;
-  font-weight: 500;
+	background-color: var(--accent1);
+	color: white;
+	border: var(--button-border);
+	border-radius: var(--rounded);
+	padding: 0.25rem 0.5rem;
+	cursor: pointer;
+	font-weight: 500;
 }
 button.other {
-  background-color: var(--accent2);
+	background-color: var(--accent2);
 }
 button.dull {
-  background-color: var(--dull);
-  font-weight: normal;
-  color: var(--text);
+	background-color: var(--dull);
+	font-weight: normal;
+	color: var(--text);
 }
 button.bad {
-  background-color: var(--bad);
+	background-color: var(--bad);
 }
 label {
-  display: block;
-  font-weight: 500;
+	display: block;
+	font-weight: 500;
 }
 input,
 textarea,
 select,
 option {
-  border-radius: 0px;
-  padding: var(--space);
-  background: var(--bg);
-  border: 1px solid var(--text);
-  border-radius: var(--rounded);
+	border-radius: 0px;
+	padding: var(--space);
+	background: var(--bg);
+	border: 1px solid var(--text);
+	border-radius: var(--rounded);
 }
 textarea {
-  height: 300px;
-  width: 100%;
-  max-width: 600px;
+	height: 300px;
+	width: 100%;
+	max-width: 600px;
 }
 nav ul {
-  margin: var(--space) 0;
-  padding: var(--space) 0;
-  border-top: 1px solid var(--text);
-  list-style: none;
+	margin: var(--space) 0;
+	padding: var(--space) 0;
+	border-top: 1px solid var(--text);
+	list-style: none;
 }
 nav ul li {
-  display: inline-block;
-  margin: var(--space);
-}
-.t-right {
-  text-align: right;
+	display: inline-block;
+	margin: var(--space);
 }
 .sm {
-  font-size: 0.8em;
+	font-size: 0.8em;
 }
 #searchBar {
-  position: relative;
+	position: relative;
 }
 #searchResults {
-  position: absolute;
-  background: var(--bg);
-  border: 1px solid #000;
-  top: calc(var(--size) + .5rem + 2px);
-  left: 0;
-  width: 100%;
-  max-height: 300px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 3px;
-  border-radius: 3px;
-  z-index: 10;
+	position: absolute;
+	background: var(--bg);
+	border: 1px solid #000;
+	top: calc(var(--size) + .5rem + 2px);
+	left: 0;
+	width: 100%;
+	max-height: 300px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	padding: 3px;
+	border-radius: 3px;
+	z-index: 10;
 }
 #searchResults a {
-  display: block;
-  box-sizing: border-box;
-  width: 100%;
-  padding: 6px 10px;
-  margin: 2px 0;
-  color: #000;
+	display: block;
+	box-sizing: border-box;
+	width: 100%;
+	padding: 6px 10px;
+	margin: 2px 0;
+	color: #000;
 }
 #searchResults a:hover {
-  color: #fff;
-  background: var(--accent2);
+	color: #fff;
+	background: var(--accent2);
 }
 mark {
-  background: var(--accent1);
-  color: white;
+	background: var(--accent1);
+	color: white;
+}
+main>section>footer>time {
+	cursor: help;
+}
+main>section>footer>time::before {
+	content: 'Updated ';
 }
 </style>
 </head>
@@ -214,17 +214,16 @@ mark {
 <header>
 	<section id="wiki">
 		<a href="javascript:app.go()" id="name">SkeleWiki</a>
-		<span id="desc">A <em>dead</em> simple tool to make bare <em>bones</em> multi-page content in a single HTML
-			file.</span>
+		<span id="desc">A <em>dead</em> simple tool to make bare <em>bones</em> multi-page content in a single HTML file.</span>
 	</section>
 	<section id="actions">
-		<div id="searchBar" style="flex:1;">
+		<div id="searchBar" style="flex:1">
 			<label>
 				<strong>Search</strong> <input type="search" oninput="app.search(event.target.value)">
 			</label>
 			<div id="searchResults"></div>
 		</div>
-		<div style="flex:2;" class="t-right">
+		<div style="flex:2;text-align:right">
 			<button id="settingsButton" class="dull" onclick="app.settings()">Settings</button>
 			<button id="newPageButton" class="other" onclick="app.add()">New Page</button>
 			<button id="saveButton" onclick="app.save()">Save</button>
@@ -350,14 +349,15 @@ mark {
 					const form = ce('form');
 					form.id = eId;
 					form.innerHTML = /*html*/`<h1>Edit</h1>
-			<label>Name <input name="name" value="${name}"></label>
-			<label>Markdown Content<br><textarea name="text">${src}</textarea></label>
-			<label>Sort Position <select name="sort">${pages.map((p, i) => `<option${i === sort ? ' selected' : ''}>${i}</option>`).join('')}</select></label>
-			<footer><button type="submit">Save</button> <button type="button" class="dull" onclick="app.edit(${id}, false)">Cancel</button> <button type="button" class="bad" onclick="app.delete(${id})">Delete</button></footer>`;
+<label>Name <input name="name" value="${name}"></label>
+<label>Markdown Content<br><textarea name="text">${src}</textarea></label>
+<label>Sort Position <select name="sort">${pages.map((p, i) => `<option${i === sort ? ' selected' : ''}>${i}</option>`).join('')}</select></label>
+<footer><button type="submit">Save</button> <button type="button" class="dull" onclick="app.edit(${id}, false)">Cancel</button> <button type="button" class="bad" onclick="app.delete(${id})">Delete</button></footer>`;
 					form.onsubmit = e => {
 						e.preventDefault();
 						q('h1', pg).textContent = form.name.value.trim();
 						q('pre', pg).innerHTML = form.text.value;
+						q('footer>time', pg).textContent = new Date().toLocaleString();
 						const newSort = parseInt(form.sort.value);
 						if (newSort !== sort) {
 							const el = pages.splice(sort, 1);
@@ -375,7 +375,8 @@ mark {
 			add() {
 				p = document.createElement('section');
 				p.id = Date.now();
-				p.innerHTML = /*html*/`<header><h1></h1></header><pre hidden></pre><article></article><footer><time>${new Date().toString()}</time> <button class="dull editButton" onclick="app.edit(${p.id})">Edit</edit></footer>`;
+				const time = new Date().toLocaleString();
+				p.innerHTML = /*html*/`<header><h1></h1></header><pre hidden></pre><article></article><footer><time title="Created ${time}">${time}</time> <button class="dull editButton" onclick="app.edit(${p.id})">Edit</edit></footer>`;
 				main.appendChild(p);
 				nav.appendChild(app.navItem(p));
 				app.edit(p.id);
@@ -453,6 +454,7 @@ mark {
 				});
 			},
 			save() {
+				const name = q('#wiki #name');
 				const pp = app.pages();
 				pp.forEach(p => {
 					const txt = q('pre', p).removeAttribute('hidden');
@@ -462,8 +464,8 @@ mark {
 					const edit = gebi(`edit${p.id}`);
 					if (edit) edit.parentElement.removeChild(edit);
 				});
-				const current = h();
 				app.go();
+				document.title = name;
 				const html = /*html*/`<!DOCTYPE html><html lang="en">
 <head>${document.head.innerHTML}</head>
 <body>${document.body.innerHTML}</body></html>`;
@@ -472,7 +474,7 @@ mark {
 
 				const el = document.createElement('a');
 				el.setAttribute('href', 'data:text/html;charset=utf-8,' + encodeURIComponent(html));
-				const filename = q('#wiki #name').textContent.toLowerCase().replace(/\W/g, '_') + '.html';
+				const filename = name.textContent.toLowerCase().replace(/\W/g, '_') + '.html';
 				el.setAttribute('download', filename);
 				document.body.appendChild(el);
 				el.click();
@@ -505,7 +507,7 @@ mark {
 	 * - HTML
 	 * - headings h1–h6+ (# h1, ## h2, ### h3, etc.)
 	 * - paragraphs (\n\n)
-	 * - line breaks (  \n)
+	 * - line breaks (	\n)
 	 * - blockquotes (> text)
 	 * - horizontal rule (---, ***, - - -, * * *)
 	 * - code blocks (```)
@@ -522,7 +524,7 @@ mark {
 	/**
 	 * markdown parser
 	 * 
-	 * @param  {string} markdown
+	 * @param	{string} markdown
 	 * @return {string}
 	 */
 	function md(markdown) {
@@ -607,12 +609,12 @@ mark {
 				// checkboxes
 				.replace(/\[( |x)\]/g, (m, checked) => `<input type="checkbox" disabled${checked.toLowerCase() === 'x' ? ' checked' : ''}>`)
 				// line breaks
-				.replace(/  +\n/gm, '<br>')
+				.replace(/	+\n/gm, '<br>')
 				// paragraphs - exclude lists, already-rendered HTML, & whitespace
 				.replace(/^([^-\+\*\d<\t \n])([^]*?)(?:\n\n)/gm, (m, leadingCharacter, body) => `<p>${leadingCharacter}${body}</p>\n`)
 				// lists
 				.replace(/^([\t ]*)(?:(-|\+|\*)|(\d+(?:\)|\.))) (.*)/gm, (m, leading, b, numbered, content) => {
-					leading = leading.replace(/  /g, '\t');
+					leading = leading.replace(/	/g, '\t');
 					const type = numbered ? 'o' : 'u';
 					return `${leading}<${type}l><li>${content}</li></${type}l>`;
 				})
