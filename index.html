@@ -146,9 +146,9 @@ nav ul li {
 #searchBar{ position: relative; }
 #searchResults {
   position: absolute;
-  background: #fff;
+  background: var(--bg);
   border: 1px solid #000;
-  top: calc(12pt + .5rem + 2px);
+  top: calc(var(--size) + .5rem + 2px);
   left: 0;
   width: 100%;
   max-height: 300px;
@@ -166,7 +166,10 @@ nav ul li {
   margin: 2px 0;
   color: #000;
 }
-#searchResults a:hover{color:#fff;background:#65a;}
+#searchResults a:hover {
+  color: #fff;
+  background: var(--accent2);
+}
 mark {
   background: var(--accent1);
   color: white;
@@ -177,16 +180,16 @@ mark {
 <header>
   <section id="wiki">
     <a href="javascript:app.go()" id="name">SkeleWiki</a>
-    <span id="desc">A <em>dead</em> simple tool for self-replicating, non-linear, multi-page content.</span>
+    <span id="desc">A <em>dead</em> simple tool to make bare <em>bones</em> multi-page content in a single HTML file.</span>
   </section>
   <section id="actions">
-    <div id="searchBar">
+    <div id="searchBar" style="flex:1;">
       <label>
         <strong>Search</strong> <input type="search" oninput="app.search(event.target.value)">
       </label>
       <div id="searchResults"></div>
     </div>
-    <div class="t-right">
+    <div style="flex:2;" class="t-right">
       <button id="settingsButton" class="dull" onclick="app.settings()">Settings</button>
       <button id="newPageButton" class="other" onclick="app.add()">New Page</button>
       <button id="saveButton" onclick="app.save()">Save</button>
@@ -233,7 +236,6 @@ mark {
       id: el.id,
       name: q('h1', el).textContent,
       src: q('pre', el)?.innerHTML ?? '',
-      sort: app.pages().findIndex(p => p.id === el.id),
     }),
     show: (el, y = true) => el.style.display = y ? 'block' : '',
     settingFields: () => Array.from(qa('#settings :is(input, textarea, select)[name]')).map(el => el.name),
@@ -288,11 +290,11 @@ mark {
     edit(id, y = true) {
       const pg = gebi(id);
       if (pg) {
-        const { name, src, sort } = app.info(pg);
-        const eId = `edit${pg.id}`;
+        const { name, src } = app.info(pg);
+        const eId = `edit${id}`;
         if (!y) {
           const form = q(`#${eId}`);
-          app.render(!form ? null : pg.id); // If the page was re-sorted, re-render everything so nav updates as well
+          app.render(!form ? null : id); // If the page was re-sorted, re-render everything so nav updates as well
           app.show(pg);
           if (form) form.parentElement.removeChild(form);
           return;
@@ -300,6 +302,7 @@ mark {
         app.go(id);
         app.show(pg, false);
         const pages = app.pages();
+        const sort = pages.findIndex(p => p.id === id);
         const form = ce('form');
         form.id = eId;
         form.innerHTML = /*html*/`<h1>Edit</h1>
@@ -318,7 +321,7 @@ mark {
             main.innerHTML = '';
             pages.forEach(p => main.appendChild(p));
           }
-          app.edit(pg.id, false);
+          app.edit(id, false);
         };
         pg.parentElement.insertBefore(form, pg);
         app.handleTab();
@@ -393,7 +396,9 @@ mark {
         const { id, name, src } = app.info(p);
         q('pre', p).setAttribute('hidden', '');
         const a = q('article', p);
-        const content = src;//.replace('', '');
+        const content = src.replace(/\[\[([^\]\|]+)(\|[^\]]+)?\]\]/g, (m, name, text) => {
+          return `<a href="javascript:app.go('${name}')">${text ? text.substring(1) : name}</a>`;
+        });
         a.innerHTML = md(content);
         a.removeAttribute('hidden');
         if (!pgId) {
