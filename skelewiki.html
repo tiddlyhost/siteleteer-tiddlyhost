@@ -195,7 +195,7 @@ main>section>footer>time::before {content: 'Updated '}
 	</section>
 	<section id="actions">
 		<div id="search" style="flex:1">
-			<input type="search" placeholder="Search" oninput="search(event.target.value)" onfocus="event.target.value && search(event.target.value)">
+			<input type="search" placeholder="Search">
 			<div id="results"></div>
 		</div>
 		<div style="flex:2;text-align:right">
@@ -228,6 +228,8 @@ w.gebi = i => document.getElementById(i);
 w.ce = t => document.createElement(t);
 w.main = q('main');
 w.nav = q('nav ul');
+w.sBar = q('#search input');
+w.res = q('#results');
 // Get and/or set the URL hash
 w.h = hash => (!hash ? true : location.hash = hash) && (!location.hash ? null : decodeURIComponent(location.hash.substring(1)));
 // The current page id
@@ -368,10 +370,9 @@ w.del = id => {
 };
 // Check all pages for text matching the given term
 w.search = term => {
-	const r = q('#search #results');
-	clearTimeout(r.debounce);
-	r.debounce = setTimeout(() => {
-		r.innerHTML = '';
+	clearTimeout(res.debounce);
+	res.debounce = setTimeout(() => {
+		res.innerHTML = '';
 		if (!term) return;
 		const lcTerm = term.toLowerCase();
 		pages().map(p => {
@@ -406,7 +407,7 @@ w.search = term => {
 				const txt = p.txt.replace(p.name, '');
 				const i = txt.toLowerCase().indexOf(lcTerm);
 				const preview = txt.length < 1 ? '' : txt.substring(Math.max(0, i - 10), Math.min(100, txt.length, i + term.length + 10));
-				r.innerHTML += /*html*/`<a href="javascript:go(${p.id})" onclick="q('#search #results').innerHTML = ''">${mark(p.name)}<p class="sm">${mark(preview)}</p></a>`;
+				res.innerHTML += /*html*/`<a href="javascript:go(${p.id})" onclick="res.innerHTML = ''">${mark(p.name)}<p class="sm">${mark(preview)}</p></a>`;
 			});
 	}, 300);
 };
@@ -430,9 +431,8 @@ w.render = (pId = null) => {
 w.save = () => {
 	go(); // go to home page
 	const pp = pages();
-	const s = q('#search');
-	q('input', s).value = '';
-	q('#results', s).innerHTML = '';
+	sBar.value = '';
+	res.innerHTML = '';
 	pp.forEach(p => {
 		const txt = q('pre', p).removeAttribute('hidden');
 		const a = q('article', p);
@@ -448,7 +448,7 @@ w.save = () => {
 <body>${document.body.innerHTML}</body></html>`;
 	render();
 	history.back();
-
+	// Create & click anchor tag with download attribute
 	const a = ce('a');
 	a.setAttribute('href', 'data:text/html;charset=utf-8,' + encodeURIComponent(html));
 	const filename = name.toLowerCase().replace(/\W/g, '_') + '.html';
@@ -460,7 +460,7 @@ w.save = () => {
 
 // Use save function if Ctrl+S is used
 w.addEventListener('keydown', e => {
-	if (e.ctrlKey && e.key === 's') {
+	if ((e.ctrlKey || e.metaKey) && e.key === 's' && !e.shiftKey) {
 		e.preventDefault();
 		save();
 	}
@@ -469,6 +469,9 @@ w.addEventListener('keydown', e => {
 w.addEventListener('popstate', e => {
 	go(h(), true);
 });
+// Trigger search on input and focus of search bar
+['input', 'focus'].forEach(e => sBar.addEventListener(e, ({ target }) => search(target.value)));
+
 // Initialize the view
 (() => {
 	render();
