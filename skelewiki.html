@@ -44,12 +44,7 @@ dialog[open] {
 	display: block;
 	background: var(--bg);
 }
-html {
-	background: var(--bg);
-}
-body {
-	background: transparent;
-}
+html {background: var(--bg)}
 body>header,
 #settings,
 main {
@@ -66,36 +61,23 @@ main>section>header>h1,
 form h1 {
 	margin: 0 0 var(--space);
 }
-*+* {
-	margin: var(--space) 0 0;
-}
-main>section+section {
-	margin: 0;
-}
-#wiki a {
-	color: var(--accent1);
-}
-#wiki #desc {
-	margin-left: var(--space);
-}
+*+* {margin: var(--space) 0 0}
+main>section+section {margin: 0}
+#wiki a {color: var(--accent1)}
+#wiki #desc {margin-left: var(--space)}
 #actions {
 	display: flex;
 	gap: var(--space);
 	align-items: center;
 }
-h1 {
-	font-size: 2.2rem;
-}
-h2 {
-	font-size: 1.8rem;
-}
+#actions>* {margin: 0}
+h1 {font-size: 2.2rem}
+h2 {font-size: 1.8rem}
 h3,
 #wiki #name {
 	font-size: 1.5rem;
 }
-h4 {
-	font-size: 1.15rem;
-}
+h4 {font-size: 1.15rem}
 h1,
 h2,
 h3,
@@ -108,12 +90,8 @@ h5,
 h6 {
 	font-style: italic;
 }
-h6 {
-	font-weight: normal;
-}
-a {
-	color: var(--accent2);
-}
+h6 {font-weight: normal}
+a {color: var(--accent2)}
 button {
 	background: var(--accent1);
 	color: #fff;
@@ -123,17 +101,13 @@ button {
 	cursor: pointer;
 	font-weight: 500;
 }
-button.other {
-	background: var(--accent2);
-}
+button.other {background: var(--accent2)}
 button.dull {
 	background: var(--dull);
 	font-weight: normal;
 	color: var(--text);
 }
-button.bad {
-	background: var(--bad);
-}
+button.bad {background: var(--bad)}
 label {
 	display: block;
 	font-weight: 500;
@@ -162,12 +136,8 @@ nav ul li {
 	display: inline-block;
 	margin: var(--space);
 }
-.sm {
-	font-size: 0.8em;
-}
-#search {
-	position: relative;
-}
+.sm {font-size: 0.8em}
+#search {position: relative}
 #results {
 	position: absolute;
 	background: var(--bg);
@@ -197,25 +167,19 @@ mark {
 	background: var(--accent1);
 	color: white;
 }
-main>section>footer>time {
-	cursor: help;
-}
-main>section>footer>time::before {
-	content: 'Updated ';
-}
+main>section>footer>time {cursor: help}
+main>section>footer>time::before {content: 'Updated '}
 </style>
 </head>
 <body>
 <header>
 	<section id="wiki">
-		<a href="javascript:go()" id="name">SkeleWiki</a>
-		<span id="desc">A <em>dead</em> simple tool to make bare <em>bones</em> multi-page content in a single HTML file.</span>
+		<a href="javascript:go()" id="name">New SkeleWiki</a>
+		<span id="desc">The <em>backbone</em> of your new site!</span>
 	</section>
 	<section id="actions">
 		<div id="search" style="flex:1">
-			<label>
-				<strong>Search</strong> <input type="search" oninput="search(event.target.value)">
-			</label>
+			<input type="search" placeholder="Search" oninput="search(event.target.value)">
 			<div id="results"></div>
 		</div>
 		<div style="flex:2;text-align:right">
