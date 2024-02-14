@@ -183,7 +183,7 @@ main>section>footer>time::before {content: 'Updated '}
 	</section>
 	<section id="actions">
 		<div id="search" style="flex:1">
-			<input type="search" placeholder="Search" oninput="search(event.target.value)">
+			<input type="search" placeholder="Search" oninput="search(event.target.value)" onfocus="event.target.value && search(event.target.value)">
 			<div id="results"></div>
 		</div>
 		<div style="flex:2;text-align:right">
