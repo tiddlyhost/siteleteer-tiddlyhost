@@ -16,6 +16,7 @@
 	--accent2: #639;
 	--dull: #eda;
 	--bad: #f64;
+	--link-style: underline;
 	--button-border: none;
 	--rounded: 3px;
 	--max-width: 1200px;
@@ -91,7 +92,10 @@ h6 {
 	font-style: italic;
 }
 h6 {font-weight: normal}
-a {color: var(--accent2)}
+a {
+	color: var(--accent2);
+	text-decoration: var(--link-style);
+}
 button {
 	background: var(--accent1);
 	color: #fff;
