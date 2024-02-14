@@ -3,21 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="version" content="1.0.0">
+<meta name="application-name" content="SkeleWiki">
 <title>SkeleWiki</title>
 <style id="css">
 :root {
 	--text: #000;
 	--font: serif;
-	--size: 12pt;
-	--space: 0.5rem;
-	--pad: calc(var(--space) / 2) var(--space);
+	--size: 13pt;
+	--space: .5rem;
+	--pad: var(--space) calc(var(--space) * 2);
 	--bg: #ffd;
 	--accent1: #682;
 	--accent2: #639;
 	--dull: #eda;
 	--bad: #f64;
 	--link-style: underline;
-	--button-border: none;
+	--btn-pad: calc(var(--space) / 2) var(--space);
+	--btn-border: none;
 	--rounded: 3px;
 	--max-width: 1200px;
 }
@@ -49,7 +52,7 @@ html {background: var(--bg)}
 body>header,
 #settings,
 main {
-	padding: var(--space);
+	padding: var(--pad);
 	width: 100%;
 	max-width: var(--max-width);
 }
@@ -108,9 +111,9 @@ a {
 button {
 	background: var(--accent1);
 	color: #fff;
-	border: var(--button-border);
+	border: var(--btn-border);
 	border-radius: var(--rounded);
-	padding: var(--pad);
+	padding: var(--btn-pad);
 	cursor: pointer;
 	font-weight: 500;
 }
@@ -129,7 +132,7 @@ input,
 textarea,
 select,
 option {
-	padding: var(--space);
+	padding: var(--btn-pad);
 	background: var(--bg);
 	border: 1px solid var(--text);
 	border-radius: var(--rounded);
@@ -149,27 +152,27 @@ nav ul li {
 	display: inline-block;
 	margin: var(--space);
 }
-.sm {font-size: 0.8em}
+.sm {font-size: .8em}
 #search {position: relative}
 #results {
 	position: absolute;
 	background: var(--bg);
 	border: 1px solid #000;
-	top: calc(var(--size) + .5rem + 2px);
+	top: calc(var(--size) + .25rem);
 	left: 0;
 	width: 100%;
 	max-height: 300px;
 	overflow-y: auto;
 	overflow-x: hidden;
-	padding: var(--pad);
+	padding: 0;
 	border-radius: var(--rounded);
 	z-index: 9;
 }
 #results a {
 	display: block;
 	width: 100%;
-	padding: var(--pad);
-	margin: 2px 0;
+	padding: var(--btn-pad);
+	margin: 0;
 	color: #000;
 }
 #results a:hover {
