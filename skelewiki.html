@@ -44,6 +44,16 @@ main>section,
 #results:empty {
 	display: none;
 }
+code,
+kbd {
+	font-family: monospace;
+	font-size: .8em;
+}
+code {
+	background: var(--dull);
+	padding: calc(var(--space) / 3) calc(var(--space) / 2);
+}
+pre>code {display: block}
 dialog[open] {
 	display: block;
 	background: var(--bg);
