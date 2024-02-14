@@ -58,10 +58,6 @@ main:empty::after,
 main>section article:empty::after {
 	content: "No content";
 }
-main>section>header>h1,
-form h1 {
-	margin: 0 0 var(--space);
-}
 *+* {margin: var(--space) 0 0}
 main>section+section {margin: 0}
 #wiki a {color: var(--accent1)}
@@ -72,6 +68,19 @@ main>section+section {margin: 0}
 	align-items: center;
 }
 #actions>* {margin: 0}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	margin: calc(var(--space) * 3) 0;
+}
+main,
+main>section>h1,
+form h1 {
+	margin-top: 0;
+}
 h1 {font-size: 2.2rem}
 h2 {font-size: 1.8rem}
 h3,
@@ -187,9 +196,9 @@ main>section>footer>time::before {content: 'Updated '}
 			<div id="results"></div>
 		</div>
 		<div style="flex:2;text-align:right">
-			<button id="settingsButton" class="dull" onclick="settings()">Settings</button>
-			<button id="newPageButton" class="other" onclick="add()">New Page</button>
-			<button id="saveButton" onclick="save()">Save</button>
+			<button id="settingsBtn" class="dull" onclick="settings()">Settings</button>
+			<button id="newBtn" class="other" onclick="add()">New Page</button>
+			<button id="saveBtn" onclick="save()">Save</button>
 		</div>
 	</section>
 	<nav><ul></ul></nav>
@@ -197,18 +206,9 @@ main>section>footer>time::before {content: 'Updated '}
 <dialog id="settings">
 	<h1>Settings</h1>
 	<form method="dialog" onsubmit="update(event.target)">
-		<label>
-			Wiki Name<br>
-			<input name="name">
-		</label>
-		<label>
-			Wiki Description<br>
-			<input name="desc">
-		</label>
-		<label>
-			Wiki CSS<br>
-			<textarea name="css"></textarea>
-		</label>
+		<label>Wiki Name<br><input name="name"></label>
+		<label>Wiki Description<br><input name="desc"></label>
+		<label>Wiki CSS<br><textarea name="css"></textarea></label>
 		<footer>
 			<button type="submit">Save</button>
 			<button type="button" class="dull" onclick="settings(true)">Cancel</button>
@@ -325,8 +325,7 @@ w.edit = (id, y = true) => {
 			q('footer>time', pg).textContent = new Date().toLocaleString();
 			const newPos = parseInt(f.pos.value);
 			if (newPos !== pos) {
-				const el = pp.splice(pos, 1);
-				pp.splice(newPos, 0, el[0]);
+				pp.splice(newPos, 0, pp.splice(pos, 1)[0]);
 				main.innerHTML = '';
 				pp.forEach(p => main.appendChild(p));
 			}
@@ -339,10 +338,15 @@ w.edit = (id, y = true) => {
 };
 // Create a new page Element & start editing
 w.add = () => {
-	p = document.createElement('section');
+	const p = ce('section');
 	p.id = Date.now();
 	const t = new Date().toLocaleString();
-	p.innerHTML = /*html*/`<header><h1></h1></header><pre hidden></pre><article></article><footer><time title="Created ${t}">${t}</time> <button class="dull editButton" onclick="edit(${p.id})">Edit</edit></footer>`;
+	p.innerHTML = /*html*/`<h1></h1>
+<pre hidden></pre>
+<article></article>
+<footer>
+	<time title="Created ${t}">${t}</time> <button class="dull editBtn" onclick="edit(${p.id})">Edit</button>
+</footer>`;
 	main.appendChild(p);
 	nav.appendChild(navItem(p));
 	edit(p.id);
@@ -442,7 +446,7 @@ w.save = () => {
 	render();
 	history.back();
 
-	const a = document.createElement('a');
+	const a = ce('a');
 	a.setAttribute('href', 'data:text/html;charset=utf-8,' + encodeURIComponent(html));
 	const filename = name.toLowerCase().replace(/\W/g, '_') + '.html';
 	a.setAttribute('download', filename);
