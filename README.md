@@ -15,7 +15,7 @@ Just download the SkeleWiki HTML file and open it in a browser to get started. I
 - Use the "Settings" button to change the wiki's name, description, and CSS, then push "Save" to make your changes.
 - Create a new page by using the "New Page" button. This will create an empty page that you can start editing right away.
     - Set a page title in the "Name" field and write some text for the page with Markdown formatting.
-        - In addition to Markdown, you can link between pages using wiki link format by putting the (case insensitive) page name in 2 square braces \[\[like this\]\]! If you want the link to have different text than the page's name, then put the page name first then the text to display after a vertical bar \[\[other page|like this\]\]!
+        - In addition to Markdown, you can link between pages using wiki link format by putting the (case insensitive) page name in 2 square braces `[[like this]]`! If you want the link to have different text than the page's name, then put the page name first then the text to display after a vertical bar `[[other page|like this]]`!
     - If you have multiple pages, you can change the order they display in the navigation by changing the Sort Position.
         - The page in the `0` position will be the "home" page of your SkeleWiki that is displayed when the file loads or when the Wiki Title is clicked.
     - Use "Save" to save the page and view the page.
