@@ -1,23 +1,23 @@
-# SkeleWiki
+# siteleteer
 
-A _dead_ simple tool for creating bare _bones_ multi-page sites in a single HTML file.
+A tiny, self-replicating tool for building multi-page websites in a single HTML file.
 
-SkeleWiki is a super hackable, self-replicating web app that lets you create inter-linking pages formatted with Markdown.
-All data created with SkeleWiki is simply stored directly as HTML on the page, and the code within the HTML file is not
+**siteleteer** is a super hackable, self-replicating web app that lets you create inter-linking pages formatted with Markdown.
+All data created with **siteleteer** is simply stored directly as HTML on the page, and the code within the HTML file is not
 minified at all, making it easier to simply crack open in a text editor and modify however you wish!
 
 It's page management with Markdown formatting and a simple search bar all rolled up into a single HTML file that's _less than 20 kilobytes!_
 
 ## How to Use
 
-Just download the SkeleWiki HTML file and open it in a browser to get started. It's pretty simple:
+Just download the **siteleteer** HTML file and open it in a browser to get started. It's pretty simple:
 
 - Use the "Settings" button to change the wiki's name, description, and CSS, then push "Save" to make your changes.
 - Create a new page by using the "New Page" button. This will create an empty page that you can start editing right away.
     - Set a page title in the "Name" field and write some text for the page with Markdown formatting.
         - In addition to Markdown, you can link between pages using wiki link format by putting the (case insensitive) page name in 2 square braces `[[like this]]`! If you want the link to have different text than the page's name, then put the page name first then the text to display after a vertical bar `[[other page|like this]]`!
     - If you have multiple pages, you can change the order they display in the navigation by changing the Sort Position.
-        - The page in the `0` position will be the "home" page of your SkeleWiki that is displayed when the file loads or when the Wiki Title is clicked.
+        - The page in the `0` position will be the "home" page of your **siteleteer** that is displayed when the file loads or when the Wiki Title is clicked.
     - Use "Save" to save the page and view the page.
     - Use "Cancel" to prevent any changes from being saved (results in an empty page if it's newly created).
     - Use "Delete" to remove the page and navigation entry.
@@ -29,4 +29,4 @@ And that's pretty much it!
 
 The code in the HTML file is not minified and has some basic comments to help navigate it so you can hack it to your exact needs.
 
-[Visit the site](https://alamantus.codeberg.page/SkeleWiki) to see SkeleWiki in action and for all details and limitations!
+[Visit the site](https://alamantus.codeberg.page/siteleteer) to see **siteleteer** in action and for all details and limitations!
