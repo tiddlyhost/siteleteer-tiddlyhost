@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="version" content="1.0.0">
+<meta name="version" content="1.0.1">
 <meta name="application-name" content="siteleteer">
 <title>siteleteer</title>
 <style id="css">
@@ -240,6 +240,7 @@ w.main = q('main');
 w.nav = q('nav ul');
 w.sBar = q('#search input');
 w.res = q('#results');
+w.hideRes = () => res.innerHTML = '';
 // Get and/or set the URL hash
 w.h = hash => (!hash ? true : location.hash = hash) && (!location.hash ? null : decodeURIComponent(location.hash.substring(1)));
 // The current page id
@@ -294,8 +295,7 @@ w.go = (page, back = false) => {
 		show(pg);
 		current = pg.id;
 	} else {
-		if (!back) location.hash = '';
-		else location.replace(location.pathname);
+		location.hash = '';
 	}
 };
 // Show (default) or hide settings dialog
@@ -344,7 +344,7 @@ w.edit = (id, y = true) => {
 				main.innerHTML = '';
 				pp.forEach(p => main.appendChild(p));
 			}
-			edit(id, false);
+			go(id);
 		};
 		pg.parentElement.insertBefore(f, pg);
 		handleTab();
@@ -382,9 +382,11 @@ w.del = id => {
 w.search = term => {
 	clearTimeout(res.debounce);
 	res.debounce = setTimeout(() => {
-		res.innerHTML = '';
+		hideRes();
 		if (!term) return;
-		const lcTerm = term.toLowerCase();
+		const re = new RegExp(term, 'i');
+		const mark = t => t.replace(re, '<mark>$&</mark>');
+		const lc = term.toLowerCase();
 		pages().map(p => {
 			const i = info(p);
 			const tmp = ce('div');
@@ -393,14 +395,14 @@ w.search = term => {
 			return i;
 		})
 			// Get only pages that contain the search term anywhere in any form
-			.filter(({txt}) => txt.match(new RegExp(term, 'i')) !== null)
+			.filter(({txt}) => txt.match(re) !== null)
 			// Compare index of literal text plus case-insensitive text
 			.sort((a, b) => {
 				const ai = a.txt.indexOf(term);
-				let aici = a.txt.toLowerCase().indexOf(lcTerm);
+				let aici = a.txt.toLowerCase().indexOf(lc);
 				if (aici < 0) aici = Infinity;
 				const bi = b.txt.indexOf(term);
-				let bici = b.txt.toLowerCase().indexOf(lcTerm);
+				let bici = b.txt.toLowerCase().indexOf(lc);
 				if (bici < 0) bici = Infinity;
 				if (ai >= 0 && bi < 0) return -1;
 				if (ai < 0 && bi >= 0) return -1;
@@ -413,11 +415,10 @@ w.search = term => {
 			})
 			// Repopulate search responses el with term highlighted
 			.forEach((p) => {
-				const mark = t => t.replace(new RegExp(`(${term.replace(/[\W\D]/g, '\\$&')})`, 'i'), '<mark>$1</mark>');
 				const txt = p.txt.replace(p.name, '');
-				const i = txt.toLowerCase().indexOf(lcTerm);
-				const preview = txt.length < 1 ? '' : txt.substring(Math.max(0, i - 10), Math.min(100, txt.length, i + term.length + 10));
-				res.innerHTML += /*html*/`<a href="javascript:go(${p.id})" onclick="res.innerHTML = ''">${mark(p.name)}<p class="sm">${mark(preview)}</p></a>`;
+				const i = txt.toLowerCase().indexOf(lc);
+				const pre = txt.length < 1 ? '' : txt.substring(i - 50, i + term.length + 50);
+				res.innerHTML += /*html*/`<a href="javascript:go(${p.id})" onclick="res.innerHTML = ''">${mark(p.name)}<p class="sm">${mark(pre)}</p></a>`;
 			});
 	}, 300);
 };
@@ -481,6 +482,8 @@ w.addEventListener('popstate', e => {
 });
 // Trigger search on input and focus of search bar
 ['input', 'focus'].forEach(e => sBar.addEventListener(e, ({ target }) => search(target.value)));
+// Hide search results when search bar not focused
+sBar.addEventListener('blur', () => setTimeout(hideRes, 99));
 
 // Initialize the view
 (() => {
