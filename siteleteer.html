@@ -214,7 +214,10 @@ main>section>footer>time::before {content: 'Updated '}
 			<button id="saveBtn" onclick="save()">Save</button>
 		</div>
 	</section>
-	<nav><ul></ul></nav>
+	<details>
+		<summary style="cursor:pointer;">Menu</summary>
+		<nav><ul></ul></nav>
+	</details>
 </header>
 <dialog id="settings">
 	<h1>Settings</h1>
@@ -287,13 +290,17 @@ w.go = (page, back = false) => {
 	if (current) edit(current, false);
 	const pp = pages();
 	pp.forEach(el => show(el, false));
-	const pg = gebi(page) ?? pp.find(el => info(el).name === page) ?? pp[0];
+	const pg = gebi(page) ?? pp.find(el => info(el).name === page);
 	if (pg) {
 		const { name } = info(pg);
 		document.title = name;
 		if (!back) h(name);
 		show(pg);
 		current = pg.id;
+	} else if (page) {
+		add(page);
+	} else if (pp[0]) {
+		go(pp[0].id);
 	} else {
 		location.hash = '';
 	}
@@ -352,11 +359,11 @@ w.edit = (id, y = true) => {
 	}
 };
 // Create a new page Element & start editing
-w.add = () => {
+w.add = (title = '') => {
 	const p = ce('section');
 	p.id = Date.now();
 	const t = new Date().toLocaleString();
-	p.innerHTML = /*html*/`<h1></h1>
+	p.innerHTML = /*html*/`<h1>${title}</h1>
 <pre hidden></pre>
 <article></article>
 <footer>
@@ -458,7 +465,7 @@ w.save = () => {
 <head>${document.head.innerHTML}</head>
 <body>${document.body.innerHTML}</body></html>`;
 	render();
-	history.back();
+	if (pp[0] && pp[0].name !== h()) history.back();
 	// Create & click anchor tag with download attribute
 	const a = ce('a');
 	a.setAttribute('href', 'data:text/html;charset=utf-8,' + encodeURIComponent(html));
