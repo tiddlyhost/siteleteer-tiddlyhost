@@ -30,3 +30,7 @@ And that's pretty much it!
 The code in the HTML file is not minified and has some basic comments to help navigate it so you can hack it to your exact needs.
 
 [Visit the site](https://alamantus.codeberg.page/siteleteer) to see **siteleteer** in action and for all details and limitations!
+
+---
+
+If you want to support the developer monetarily, you can send one-time donations via <https://buymeacoffee.com/robbieantenesse> or <https://ko-fi.com/robbieantenesse>, or you can use <https://liberapay.com/robbieantenesse> to set up recurring donations. This is absolutely not required, but it's greatly appreciated!
