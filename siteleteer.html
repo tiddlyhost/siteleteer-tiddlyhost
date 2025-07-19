@@ -446,7 +446,7 @@ w.render = (pId = null) => {
 	});
 };
 // Reset to default state, remove rendered Markdown, start download of HTML file, and reset to current view.
-w.save = () => {
+w.save = (html = false) => {
 	go(); // go to home page
 	const pp = pages();
 	sBar.value = '';
@@ -461,14 +461,16 @@ w.save = () => {
 	});
 	const name = q('#wiki #name').textContent;
 	document.title = name;
-	const html = /*html*/`<!DOCTYPE html><html lang="en">
+	const doc = /*html*/`<!DOCTYPE html><html lang="en">
 <head>${document.head.innerHTML}</head>
 <body>${document.body.innerHTML}</body></html>`;
 	render();
 	if (pp[0] && pp[0].name !== h()) history.back();
+	// Return the content instead of saving
+	if (html) return doc;
 	// Create & click anchor tag with download attribute
 	const a = ce('a');
-	a.setAttribute('href', 'data:text/html;charset=utf-8,' + encodeURIComponent(html));
+	a.setAttribute('href', 'data:text/html;charset=utf-8,' + encodeURIComponent(doc));
 	const filename = name.toLowerCase().replace(/\W/g, '_') + '.html';
 	a.setAttribute('download', filename);
 	document.body.appendChild(a);
