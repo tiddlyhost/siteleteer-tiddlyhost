@@ -138,6 +138,16 @@ label {
 	display: block;
 	font-weight: 500;
 }
+#putStatus {
+	color: var(--dull);
+	display: inline-block;
+	width: 1rem;
+}
+#putStatus.fade {
+	color: var(--accent1);
+	opacity: 0;
+	transition: opacity 1s cubic-bezier(1,0,1,0);
+}
 input,
 textarea,
 select,
@@ -213,6 +223,7 @@ main>section>footer>time::before {content: 'Updated '}
 			<button id="newBtn" class="other" onclick="add()">New Page</button>
 			<button id="saveBtn" onclick="save()">Save</button>
 			<button id="putSaveBtn" onclick="putSave()" hidden>Save to server</button>
+			<span id="putStatus" hidden></span>
 		</div>
 	</section>
 	<details>
@@ -483,8 +494,8 @@ w.putEnable = () => {
 	if (!location.protocol.startsWith('http')) return;
 	fetch(location.href, { method: 'OPTIONS' }).then(res => {
 		if (res.ok && res.headers.get('dav')) {
-			// Show the put save button
-			q('#putSaveBtn').removeAttribute('hidden');
+			// Show put save button and put status
+			qa('#putSaveBtn, #putStatus').forEach(e => e.removeAttribute('hidden'));
 			// Tweak original save button text
 			q('#saveBtn').textContent = 'Save locally';
 		}
@@ -493,9 +504,23 @@ w.putEnable = () => {
 // Do a put save to the server
 w.putSave = () => {
 	const doc = save(true);
+	const s = q('#putStatus');
+	// Show wait indicator
+	s.textContent = "\u22ef";
+	s.classList.remove('fade');
 	var headers = { "Content-Type": "text/html;charset=UTF-8" };
 	fetch(location.href, { method: "PUT", headers, body: doc }).then(res => {
-		if (!res.ok) alert("Save failed!");
+		if (res.ok) {
+			// Show success indicator briefly
+			s.textContent = "\u2714";
+			s.classList.add('fade');
+		} else {
+			s.textContent = "";
+			alert("Save failed!");
+		}
+	}).catch(err => {
+		s.textContent = "";
+		alert("Save failed!");
 	})
 }
 
