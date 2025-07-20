@@ -212,6 +212,7 @@ main>section>footer>time::before {content: 'Updated '}
 			<button id="settingsBtn" class="dull" onclick="settings()">Settings</button>
 			<button id="newBtn" class="other" onclick="add()">New Page</button>
 			<button id="saveBtn" onclick="save()">Save</button>
+			<button id="putSaveBtn" onclick="putSave()" hidden>Save to server</button>
 		</div>
 	</section>
 	<details>
@@ -477,6 +478,26 @@ w.save = (html = false) => {
 	a.click();
 	document.body.removeChild(a);
 };
+// Unhide the put save button if webdav is detected
+w.putEnable = () => {
+	if (!location.protocol.startsWith('http')) return;
+	fetch(location.href, { method: 'OPTIONS' }).then(res => {
+		if (res.ok && res.headers.get('dav')) {
+			// Show the put save button
+			q('#putSaveBtn').removeAttribute('hidden');
+			// Tweak original save button text
+			q('#saveBtn').textContent = 'Save locally';
+		}
+	}).catch(err => {})
+}
+// Do a put save to the server
+w.putSave = () => {
+	const doc = save(true);
+	var headers = { "Content-Type": "text/html;charset=UTF-8" };
+	fetch(location.href, { method: "PUT", headers, body: doc }).then(res => {
+		if (!res.ok) alert("Save failed!");
+	})
+}
 
 // Use save function if Ctrl+S is used
 w.addEventListener('keydown', e => {
@@ -496,6 +517,7 @@ sBar.addEventListener('blur', () => setTimeout(hideRes, 99));
 
 // Initialize the view
 (() => {
+	putEnable();
 	render();
 	go(h());
 })();
