@@ -520,7 +520,7 @@ sBar.addEventListener('blur', () => setTimeout(hideRes, 99));
  * - bold, italic (**bold**, __bold__, *italic*, _italic_, ***bold & italic***, ___bold & italic___, **_bold & italic_**, etc.)
  * - strikethrough (~~strikethrough~~)
  * - escaped characters (\*, \_)
- * 
+ *
  * @param	{string} src
  * @return {string}
  */
@@ -552,7 +552,7 @@ function md(src) {
 	var cIdx = 0; // Code index
 	var html = []; // HTML tags
 	var hIdx = 0; // HTML index
-	
+
 	// to allow matching trailing paragraphs
 	var l = src.length;
 	if (src[l - 1] !== '\n' && src[l - 2] !== '\n') {
@@ -595,7 +595,7 @@ function md(src) {
 		.replace(/^([^\n\t ])(.*)\n====+/gm, '<h1>$1$2</h1>')
 		// headings h2 (commonmark)
 		.replace(/^([^\n\t ])(.*)\n----+/gm, '<h2>$1$2</h2>')
-		// horizontal rule 
+		// horizontal rule
 		.replace(/\n( *[-*]){3,}\n/gm, '<hr>')
 		// checkboxes
 		.replace(/\[( |x)\]/g, (m, checked) => `<input type="checkbox" disabled${checked.toLowerCase() === 'x' ? ' checked' : ''}>`)
